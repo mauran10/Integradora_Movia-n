@@ -1,0 +1,243 @@
+﻿@page
+@model Integradora_Movia.Pages.IndexModel
+@{
+    ViewData["Title"] = "Home page";
+    // Asume que _Layout.cshtml tiene cargadas las librerías de Mapbox
+    Layout = "_Layout";
+}
+
+<section class="hero-section-new">
+    <div class="hero-content">
+        <h1 class="hero-title">
+            Tu Ciudad. 
+            <br />
+            Tu Ruta.
+            <br />
+            MOVIA.</h1>
+        <p class="hero-subtitle">
+            Encuentra tu autobús en tiempo real. Planea, viaja, y llega a tu destino sin incertidumbre.
+        </p>
+        <a href="#quienes-somos" class="btn-primary-hero">Explora</a>
+
+        <a asp-page="/Mapa" class="btn-secondary-hero">Ver Mapa en Vivo</a>
+    </div>
+</section>
+
+<section class="quienes-somos-section-new" id="quienes-somos">
+
+    <div class="container quienes-somos-container-new">
+
+        <div class="text-content-new">
+            <h2 class="section-title-new">Acerca de MOVIA: Transformando tu Viaje</h2>
+            <p>
+                En MOVIA, somos pioneros en la revolución del transporte público. Nuestra pasión es conectar a las personas con su destino de la manera más inteligente y eficiente posible. Hemos desarrollado una plataforma innovadora que te pone al mando de tu ruta de autobús, eliminando la incertidumbre y optimizando tu tiempo.
+            </p>
+            <p>
+                Con tecnología de rastreo en tiempo real, información precisa sobre los tiempos de llegada y datos de ocupación de los autobuses, nos aseguramos de que cada viaje sea predecible, cómodo y seguro.
+            </p>
+            <div class="action-buttons-new">
+                <a href="#mision" class="btn-primary-new">Descubre más</a>
+            </div>
+        </div>
+
+        <div class="image-content-new">
+            <img src="~/images/local_carta.jpg" alt="Programador " class="quienes-somos-image-new" />
+        </div>
+
+    </div>
+</section>
+
+<section class="mision-section" id="mision">
+
+    <div class="background-video-container">
+        <video autoplay muted loop playsinline id="bgVideo">
+            <source src="~/videos/fondo_cartas.mp4" type="video/mp4">
+            Tu navegador no soporta el video de fondo.
+        </video>
+
+    </div>
+    <div class="container">
+        <h2 class="section-title">Nuestra Misión</h2>
+
+        <div class="mision-cards-container">
+
+            <div class="mision-card">
+                <i class="fas fa-clock card-icon"></i>
+                <h3 class="card-title">Eliminar la Incertidumbre</h3>
+                <p>Proporcionar tiempos de llegada (ETA) predictivos y actualizados a tu parada, permitiéndote aprovechar mejor tu tiempo.</p>
+            </div>
+
+            <div class="mision-card">
+                <i class="fas fa-bus card-icon"></i>
+                <h3 class="card-title">Rastreo Total de la Ruta</h3>
+                <p>Ofrecer la ubicación GPS exacta del autobús en la ruta para que siempre sepas dónde se encuentra y cuánto falta realmente.</p>
+            </div>
+
+            <div class="mision-card">
+                <i class="fas fa-users card-icon"></i>
+                <h3 class="card-title">Información de Ocupación</h3>
+                <p>Indicar el nivel de aforo (qué tan lleno va el autobús) para que tomes decisiones informadas antes de subir.</p>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+
+<section class="intro-interface" id="movia_vision">
+    <div class="container intro-grid">
+        <div class="intro-text">
+            <h1 class="vision-movia">Nuestra Vision</h1>
+            <p>
+                Nuestra vision es conectar a las ciudades con sus ciudadanos a traves de un
+                ecosistema que sincroniza rutas, tiempos y medios de transporte- desde autobuses
+                hasta trenes- bajo una sola plataforma accesible, confiable y adaptable.
+            </p>
+            <a class="btn-ver-mas" href="#seccion-soluciones">Ver nuestras soluciones</a>
+        </div>
+
+        <div class="intro-image" role="img" aria-label="Producto MOVIA">
+            <img src="~/images/mision_movia.jpg" alt="Personas Programando" />
+        </div>
+    </div>
+</section>
+
+
+<section class="solutions-section" id="seccion-soluciones">
+    <div class="background-video-container">
+        <video autoplay muted loop playsinline id="bgVideo">
+            <source src="~/videos/fondo_cartas.mp4" type="video/mp4">
+            Tu navegador no soporta el video de fondo.
+        </video>
+
+    </div>
+
+    <h2>ALGUNAS DE NUESTRAS SOLUCIONES</h2>
+
+    <div class="carousel-wrapper">
+        <button class="carousel-button prev-button" aria-label="Anterior">←</button>
+        <div class="carousel-container" id="carouselContainer">
+
+            <div class="carousel-track" id="carouselTrack">
+                <div class="card_7 card" data-index="7">
+                    <h2>Pago flexible</h2><br>
+                    <p>
+                        Billetera digital, tarjeta,efectivo o prepago, todo
+                        en un mismo sistema.
+                    </p>
+                </div>
+
+                <div class="card_8 card" data-index="8">
+                    <h2>Enfoque local y cultural</h2><br>
+                    <p>
+                        Refleja la identidad del norte de Mexico: diseño,lenguaje
+                        y clima real del entorno.
+                    </p>
+                </div>
+
+                <div class="card_9 card" data-index="9">
+                    <h2>Ecosistema Multimodal</h2><br>
+                    <p>Integra bus ,metro,bici,scooter y ride_sharin en una sola app </p>
+                </div>
+
+                <div class="card_1 card" data-index="1">
+                    <h2>Datos en tiempo real</h2><br>
+                    <p>
+                        Informacion precisa sobre ocupacion,
+                        retrasos y estado del tranporte.
+                    </p>
+                </div>
+
+                <div class="card_2 card" data-index="2">
+                    <h2>Diseño limpio y fluido</h2><br>
+                    <p>
+                        Interfaz moderna, ligera y rapida, pensada
+                        para funcionar con baja señal.
+                    </p>
+                </div>
+
+                <div class="card_3 card" data-index="3">
+                    <h2>Comunidad conectada</h2><br>
+                    <p>
+                        Espacio para reportar incidencias, opinar y colaborar
+                        con otros usuarios.
+                    </p>
+                </div>
+
+                <div class="card_4 card" data-index="4">
+                    <h2>Ultima milla inteligente</h2><br>
+                    <p>Sugiere como llegar del transporte a tu destino. </p>
+                </div>
+
+                <div class="card_5 card" data-index="5">
+                    <h2>Sostenibilidad gamificada</h2><br>
+                    <p>
+                        Ganas puntos por usar transporte eco y puedes
+                        canjearlos por beneficios.
+                    </p>
+                </div>
+
+                <div class="card_6 card" data-index="6">
+                    <h2>Accesibilidad total</h2><br>
+                    <p>
+                        Opciones auditivas, visuales y de asistencia para
+                        perosnas con discapacidad.
+                    </p>
+                </div>
+
+                <div class="card_7 card" data-index="7">
+                    <h2>Pago flexible</h2><br>
+                    <p>
+                        Billetera digital, tarjeta,efectivo o prepago, todo
+                        en un mismo sistema.
+                    </p>
+                </div>
+
+                <div class="card_8 card" data-index="8">
+                    <h2>Enfoque local y cultural</h2><br>
+                    <p>
+                        Refleja la identidad del norte de Mexico: diseño,lenguaje
+                        y clima real del entorno.
+                    </p>
+                </div>
+
+                <div class="card_9 card" data-index="9">
+                    <h2>Ecosistema Multimodal</h2><br>
+                    <p>Integra bus ,metro,bici,scooter y ride_sharin en una sola app </p>
+                </div>
+
+                <div class="card_1 card" data-index="1">
+                    <h2>Datos en tiempo real</h2><br>
+                    <p>
+                        Informacion precisa sobre ocupacion,
+                        retrasos y estado del tranporte.
+                    </p>
+                </div>
+                <div class="card_2 card" data-index="2">
+                    <h2>Diseño limpio y fluido</h2><br>
+                    <p>
+                        Interfaz moderna, ligera y rapida, pensada
+                        para funcionar con baja señal.
+                    </p>
+                </div>
+
+                <div class="card_3 card" data-index="3">
+                    <h2>Comunidad conectada</h2><br>
+                    <p>
+                        Espacio para reportar incidencias, opinar y colaborar
+                        con otros usuarios.
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+        <button class="carousel-button next-button" aria-label="Siguiente">→</button>
+
+    </div>
+
+</section>
+
+@section Scripts {
+    <script src="~/js/site.js" asp-append-version="true"></script>
+}

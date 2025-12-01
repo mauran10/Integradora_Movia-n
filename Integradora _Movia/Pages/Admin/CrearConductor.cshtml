@@ -1,0 +1,57 @@
+﻿@page
+@model Integradora_Movia.Pages.Admin.CrearConductorModel
+
+<h2>Crear Conductor</h2>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-danger">@Model.Message</div>
+}
+
+<form method="post">
+
+    <div class="form-group">
+        <label>Nombres</label>
+        <input asp-for="Conductor.Nombres" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Apellidos</label>
+        <input asp-for="Conductor.Apellidos" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>CURP</label>
+        <input asp-for="Conductor.Curp" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Correo</label>
+        <input asp-for="Conductor.CorreoElectronico" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Número de Licencia</label>
+        <input asp-for="Conductor.NumeroLicencia" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Teléfono</label>
+        <input asp-for="Conductor.NumeroTelefono" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Tipo Licencia</label>
+        <input asp-for="Conductor.TipoLicencia" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label>Vencimiento</label>
+        <input asp-for="Conductor.Vencimiento" type="date" class="form-control" />
+    </div>
+
+    <br />
+
+    <button class="btn btn-primary">Crear</button>
+    <a asp-page="Conductores" class="btn btn-secondary">Cancelar</a>
+</form>

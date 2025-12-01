@@ -1,0 +1,25 @@
+﻿@page "{id:int}"
+@model Integradora_Movia.Pages.Admin.EliminarConductorModel
+
+<h2>Eliminar Conductor</h2>
+
+<div class="alert alert-warning">
+    <strong>¿Estás seguro que deseas eliminar este conductor?</strong>
+</div>
+
+<div>
+    <p><strong>Nombre:</strong> @Model.Conductor.Nombres</p>
+    <p><strong>Apellido:</strong> @Model.Conductor.Apellidos</p>
+    <p><strong>Licencia:</strong> @Model.Conductor.NumeroLicencia</p>
+</div>
+
+<form method="post">
+    <!-- Campo ID REAL -->
+    <input type="hidden" asp-for="Conductor.IdConductor" />
+
+    <button type="submit" asp-page-handler="Delete" class="btn btn-danger">
+        Eliminar definitivamente
+    </button>
+
+    <a asp-page="Conductores" class="btn btn-secondary">Cancelar</a>
+</form>

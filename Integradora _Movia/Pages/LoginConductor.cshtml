@@ -1,0 +1,80 @@
+﻿@page
+@model Integradora_Movia.Pages.LoginConductorModel
+@{
+    Layout = "_LoginLayout";
+    ViewData["Title"] = "Iniciar Sesión (Conductor)";
+}
+
+<video autoplay muted loop id="myVideo">
+    <source src="~/videos/fondo_login.mp4" type="video/mp4">
+    Tu navegador no soporta videos en HTML5.
+</video>
+
+<div class="login-page">
+    <div class="container-login">
+
+        <h1>MOVIA </h1>
+        <p>Acceso Conductores.</p>
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="text-danger text-center mb-3">@Model.ErrorMessage</div>
+        }
+
+        <form method="post">
+
+            <input type="hidden" asp-for="ReturnUrl" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="form-group">
+                <label asp-for="Input.CorreoElectronico"></label>
+                <input asp-for="Input.CorreoElectronico" class="form-control" placeholder="ejemplo.conductor@correo.com" />
+                <span asp-validation-for="Input.CorreoElectronico" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.NumeroLicencia"></label>
+                <input asp-for="Input.NumeroLicencia" class="form-control" placeholder="Ej: LIC1234567890" />
+                <span asp-validation-for="Input.NumeroLicencia" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.Contrasena"></label>
+                <input asp-for="Input.Contrasena" class="form-control" type="password" placeholder="********" />
+                <span asp-validation-for="Input.Contrasena" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-login">Iniciar Sesión</button>
+
+            <div class="login-links">
+                <a href="/RegistroConductor">¿Quieres registrarte como conductor?</a>
+                <a href="/Login">Acceder como Usuario normal</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<footer class="login-footer">
+    <div class="footer-content">
+        <div class="copyright-info">
+            <p>&copy; 2025 - Integradora - <a asp-area="" asp-page="/Privacy">Política de Privacidad</a></p>
+        </div>
+        <div class="social-links">
+            <a href="#" class="social-icon" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" class="social-icon" title="Twitter / X">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <a href="#" class="social-icon" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+    </div>
+</footer>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

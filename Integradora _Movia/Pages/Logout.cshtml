@@ -1,0 +1,28 @@
+﻿@page
+@model Integradora_Movia.Pages.LogoutModel
+@{
+    ViewData["Title"] = "Cerrando Sesión";
+    // No necesitamos un layout visible, ya que la acción es instantánea.
+    Layout = null;
+}
+
+<!--
+    Esta página no es para que el usuario la vea,
+    sino para que procese la acción de cierre de sesión.
+    Se recomienda usar un formulario POST para evitar ataques CSRF (Cross-Site Request Forgery).
+    Si el usuario navega aquí directamente (GET), será redirigido por el OnGet() en el Code-Behind.
+-->
+<form method="post" asp-page="/Logout">
+    <input type="submit" value="Cerrar Sesión" style="display:none;" />
+</form>
+
+<script>
+    // Este script enviará el formulario automáticamente para procesar el cierre de sesión
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelector('form').submit();
+    });
+</script>
+```
+eof
+
+

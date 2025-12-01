@@ -1,0 +1,120 @@
+﻿/* ===== DARK MODE ADMIN PANEL ===== */
+
+body.admin {
+    background-color: #121212;
+    color: #e5e5e5;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Contenedor */
+.admin-container {
+    background-color: #433066;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    margin: 20px 20px;
+    height: 80vh;
+}
+
+/* Títulos */
+ h3 {
+    color: black !important;
+    padding: 20px 20px;
+}
+
+
+
+/* Tabla */
+
+table {
+    background-color:whitesmoke;
+    color: #ddd;
+    margin-top:20px;
+    border-radius: 10px;
+    text-align:center;
+    overflow: hidden;
+}
+
+    table th {
+        color:white;
+        text-align:center;
+    }
+
+    table thead {
+        background: #272727;
+    }
+
+    table tbody tr:hover {
+        background-color:lightgray;
+        
+    }
+
+.row {
+    margin-right: 0;
+     margin-left:0;
+    }
+
+/* Inputs */
+input.form-control {
+    background-color: white;
+    color: black;
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.05); /* Sombra interior sutil */
+}
+
+    input.form-control:focus {
+        background: #222;
+        border-color: #0d6efd;
+        color: #fff;
+    }
+
+/* Botones */
+
+.mt-4{
+
+    margin-bottom:6em;
+    margin-left:1em;
+}
+
+.btn {
+    border-radius: 8px !important;
+    padding: 7px 15px !important;
+}
+
+.btn-primary {
+    background: #0d6efd;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background: #0056d2;
+    }
+
+.btn-danger {
+    background: #d40000;
+    border: none;
+}
+
+    .btn-danger:hover {
+        background: #a30000;
+    }
+
+.btn-warning {
+    background: #e6a100;
+    border: none;
+    color: black;
+}
+
+    .btn-warning:hover {
+        background: #d18f00;
+    }
+
+/* Alertas */
+.alert-danger {
+    background: #6b0000;
+    color: #ffb8b8;
+}
+
+.alert-warning {
+    background: #4f3d00;
+    color: #ffe18d;
+}

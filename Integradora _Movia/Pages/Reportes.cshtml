@@ -1,0 +1,64 @@
+﻿@page
+@model ReportesModel
+@{
+    // CAMBIO CRÍTICO: Usar el Layout principal de la aplicación, NO el de Login.
+    Layout = "_Layout";
+    ViewData["Title"] = "Panel de Reportes";
+}
+
+<!-- INCLUSIÓN DE FONT AWESOME PARA ICONOS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMD/CDQ+bIOW0iXwX3JjJ0/yU/z4p2A2qD9gq4B5eR2fG0Q0h/x6+4r5O2T/rA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Contenedor Principal con Espaciado -->
+<main class="report-layout">
+
+    <!-- Título y Descripción -->
+    <div class="report-header">
+        <h1 class="report-title">Panel de Reportes</h1>
+        <p class="report-description">
+            Bienvenido a tu panel de reportes. Aquí puedes consultar y gestionar todos los informes generados por el sistema de Movía Transit.
+        </p>
+    </div>
+
+    <!-- Contenedor de las Tarjetas de Reporte (Grid Responsivo) -->
+    <div class="report-grid">
+
+        <!-- TARJETA 1: Reporte de Incidentes de Ruta -->
+        <!-- NOTA: Los enlaces deben ser dinámicos en tu aplicación real -->
+        <div class="report-card card-incident">
+            <div class="card-content">
+                <div class="card-meta">
+                    <!-- Ícono de Advertencia/Incidente -->
+                    <i class="fas fa-exclamation-triangle card-icon text-red"></i>
+                    <span class="card-tag tag-red">Actualizado: 18/11/2025</span>
+                </div>
+                <h2 class="card-title-r">Incidentes de Ruta</h2>
+                <p class="card-text">
+                    Detalles sobre desvíos, accidentes o problemas en las rutas de los autobuses.
+                </p>
+              
+                <a asp-page="/Reportes_Incidentes" class="card-button">Ingresar</a>
+
+            </div>
+        </div>
+
+        <!-- TARJETA 3: Reporte de Feedback de Usuarios -->
+        <div class="report-card card-feedback">
+            <div class="card-content">
+                <div class="card-meta">
+                    <!-- Ícono de Comentarios/Usuarios -->
+                    <i class="fas fa-comments card-icon text-green"></i>
+                    <span class="card-tag tag-green">Actualizado: 10/11/2025</span>
+                </div>
+                <h2 class="card-title">Feedback de Usuarios</h2>
+                <p class="card-text">
+                    Resumen de opiniones, quejas y sugerencias recibidas por los pasajeros.
+                </p>
+                <a asp-page="/ReporteUsuario" class="card-button">Ingresar al Panel</a>
+            </div>
+        </div>
+
+        <!-- Puedes añadir más tarjetas aquí si es necesario -->
+
+    </div>
+</main>

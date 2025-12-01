@@ -1,0 +1,213 @@
+﻿@page
+@model Integradora_Movia.Pages.Reportes_IncidentesModel
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Panel de Incidentes";
+}
+
+<!--
+    NOTA: Este archivo SOLO contiene el contenido dentro de la etiqueta <main> y el script de la página.
+    Se asume que el layout externo ya incluye:
+    - <html>, <head> (con fuentes, CSS, etc.)
+    - El Navbar superior
+    - El Footer
+-->
+
+<main class="main-container">
+
+    <!-- ================================================= -->
+    <!-- SECCIÓN DE REPORTE DETALLADO DE INCIDENTES -->
+    <!-- ================================================= -->
+    <section id="incidents-report" class="content-section">
+        <div class="page-header">
+
+            <a class="card-button" asp-area="" asp-page="/Reportes"> Volver al Panel</a>
+
+            <h1 class="page-title">Reporte de Incidentes de Ruta</h1>
+            <p class="page-subtitle">Gestión y seguimiento de todos los incidentes reportados en la red de Movía Transit.</p>
+        </div>
+
+        <div class="report-details-container">
+            <h2 class="section-title">Filtros y Búsqueda</h2>
+            <div class="filter-bar">
+                <input type="text" placeholder="Buscar por Autobús, Ruta o Descripción..." id="incident-search">
+                <select id="incident-severity-filter">
+                    <option value="">Severidad (Todas)</option>
+                    <option value="Alta">Alta</option>
+                    <option value="Media">Media</option>
+                    <option value="Baja">Baja</option>
+                </select>
+                <select id="incident-status-filter">
+                    <option value="">Estado (Todos)</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="En Proceso">En Proceso</option>
+                    <option value="Resuelto">Resuelto</option>
+                </select>
+                <!-- Se añade un botón de reset para limpiar todos los filtros -->
+                <button id="reset-filters" style="padding: 10px 15px; background-color: #e5e7eb; color: var(--movia-text); border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.3s; min-width: 150px;">
+                    <i data-lucide="undo-2" width="16" height="16" style="vertical-align: middle;"></i> Limpiar Filtros
+                </button>
+            </div>
+
+            <h2 class="section-title">Incidentes Recientes (Últimos 30 Días)</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ruta / Autobús</th>
+                        <th>Severidad</th>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody id="incidents-table-body">
+                    <!-- Los datos se inyectarán aquí mediante JavaScript -->
+                </tbody>
+            </table>
+            <!-- Contenedor para el mensaje de no resultados -->
+            <div id="no-results" style="text-align: center; padding: 20px; font-style: italic; color: #6b7280; display: none;">
+                No se encontraron incidentes que coincidan con los filtros aplicados.
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<script>
+    // Inicializa los iconos de Lucide (asumiendo que Lucide ya fue cargado en el layout)
+    if (typeof lucide !== 'undefined') {
+        lucide.createIcons();
+    }
+
+    // --- 1. DATOS DE EJEMPLO (Simulación de una base de datos) ---
+    const allIncidents = [
+        { id: 1023, route: 'Ruta A', bus: '301', severity: 'Alta', status: 'Resuelto', date: '2025-11-18', detail: 'Fallo de motor en Av. Principal.' },
+        { id: 1024, route: 'Ruta C', bus: '450', severity: 'Media', status: 'Resuelto', date: '2025-11-17', detail: 'Accidente menor, retraso de 20 min.' },
+        { id: 1025, route: 'Ruta B', bus: '210', severity: 'Baja', status: 'Resuelto', date: '2025-11-16', detail: 'Reporte de vandalismo.' },
+        { id: 1026, route: 'Ruta A', bus: '305', severity: 'Alta', status: 'Pendiente', date: '2025-11-15', detail: 'Bloqueo de calle por manifestación.' },
+        { id: 1027, route: 'Ruta D', bus: '500', severity: 'Baja', status: 'En Proceso', date: '2025-11-14', detail: 'Problema de comunicación GPS.' },
+        { id: 1028, route: 'Ruta B', bus: '211', severity: 'Media', status: 'Pendiente', date: '2025-11-19', detail: 'Neumático pinchado cerca del terminal.' },
+        { id: 1029, route: 'Ruta C', bus: '451', severity: 'Alta', status: 'En Proceso', date: '2025-11-19', detail: 'Incidente de seguridad con pasajero.' },
+        { id: 1030, route: 'Ruta D', bus: '501', severity: 'Baja', status: 'Resuelto', date: '2025-11-18', detail: 'Luces interiores fallando.' },
+    ];
+
+    // --- 2. MAPEO DE TAGS Y CLASES CSS ---
+    const tagMap = {
+        'Alta': 'tag tag-high',
+        'Media': 'tag tag-medium',
+        'Baja': 'tag tag-low',
+        'Resuelto': 'tag tag-resolved',
+        // 'Pendiente' y 'En Proceso' usan las clases generales y el mapeo específico en getStatusClass
+    };
+
+    // Función para obtener la clase de estado (usa los colores definidos)
+    const getStatusClass = (status) => {
+        if (status === 'Resuelto') return 'tag-resolved'; // Azul
+        if (status === 'Pendiente') return 'tag-medium';  // Amarillo
+        if (status === 'En Proceso') return 'tag-resolved'; // Azul (o podrías usar un morado de acento si lo prefieres)
+        return 'tag';
+    };
+
+    // Función para formatear la fecha a DD/MM/AAAA
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+    };
+
+    // --- 3. FUNCIÓN DE RENDERIZADO DE TABLA ---
+    const renderTable = (incidents) => {
+        const tbody = document.getElementById('incidents-table-body');
+        const noResults = document.getElementById('no-results');
+
+        tbody.innerHTML = ''; // Limpiar la tabla
+
+        if (incidents.length === 0) {
+            noResults.style.display = 'block';
+            return;
+        }
+        noResults.style.display = 'none';
+
+        incidents.forEach((incident, index) => {
+            const row = tbody.insertRow();
+
+            // Aplica el estilo de fila alterna desde JavaScript (también está en CSS)
+            if (index % 2 === 1) {
+                 row.style.backgroundColor = 'var(--movia-purple-light)';
+            }
+
+            // Columna ID
+            row.insertCell().textContent = incident.id;
+
+            // Columna Ruta / Autobús
+            row.insertCell().textContent = `${incident.route} (Autobús ${incident.bus})`;
+
+            // Columna Severidad (con Tag)
+            row.insertCell().innerHTML = `<span class="${tagMap[incident.severity]}">${incident.severity}</span>`;
+
+            // Columna Estado (con Tag)
+            const statusTag = document.createElement('span');
+            statusTag.textContent = incident.status;
+            statusTag.className = `tag ${getStatusClass(incident.status)}`;
+            row.insertCell().appendChild(statusTag);
+
+            // Columna Fecha
+            row.insertCell().textContent = formatDate(incident.date);
+
+            // Columna Detalle
+            row.insertCell().textContent = incident.detail;
+        });
+    };
+
+    // --- 4. FUNCIÓN DE FILTRADO ---
+    const filterIncidents = () => {
+        const searchVal = document.getElementById('incident-search').value.toLowerCase();
+        const severityVal = document.getElementById('incident-severity-filter').value;
+        const statusVal = document.getElementById('incident-status-filter').value;
+
+        const filtered = allIncidents.filter(incident => {
+            // Filtro 1: Búsqueda por texto (Ruta, Autobús o Detalle)
+            const matchesSearch = searchVal === '' ||
+                                  incident.route.toLowerCase().includes(searchVal) ||
+                                  incident.bus.includes(searchVal) ||
+                                  incident.detail.toLowerCase().includes(searchVal);
+
+            // Filtro 2: Severidad
+            const matchesSeverity = severityVal === '' || incident.severity === severityVal;
+
+            // Filtro 3: Estado
+            const matchesStatus = statusVal === '' || incident.status === statusVal;
+
+            return matchesSearch && matchesSeverity && matchesStatus;
+        });
+
+        renderTable(filtered);
+    };
+
+    // --- 5. INICIALIZACIÓN Y LISTENERS ---
+
+    // Asignar listeners a los controles de filtro
+    const searchInput = document.getElementById('incident-search');
+    const severitySelect = document.getElementById('incident-severity-filter');
+    const statusSelect = document.getElementById('incident-status-filter');
+    const resetButton = document.getElementById('reset-filters');
+
+    // Event listeners para cambios inmediatos
+    searchInput.addEventListener('input', filterIncidents);
+    severitySelect.addEventListener('change', filterIncidents);
+    statusSelect.addEventListener('change', filterIncidents);
+
+    // Event listener para el botón de limpieza de filtros
+    resetButton.addEventListener('click', () => {
+        searchInput.value = '';
+        severitySelect.value = '';
+        statusSelect.value = '';
+        filterIncidents(); // Vuelve a renderizar sin filtros
+    });
+
+    // Cargar la tabla al iniciar la página
+    window.addEventListener('load', () => {
+        filterIncidents();
+    });
+
+</script>

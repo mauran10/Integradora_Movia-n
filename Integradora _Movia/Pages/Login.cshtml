@@ -1,0 +1,91 @@
+﻿@page
+@model Integradora_Movia.Pages.LoginModel
+@{
+    Layout = "_LoginLayout";
+    ViewData["Title"] = "Iniciar Sesión";
+}
+
+<video autoplay muted loop id="myVideo">
+    <source src="~/videos/fondo_login.mp4" type="video/mp4">
+    Tu navegador no soporta videos en HTML5.
+</video>
+
+<div class="login-page">
+    <div class="container-login">
+        <h1>MOVIA</h1>
+        <p>Ingresa tus datos para acceder.</p>
+
+        @if (Model.ReturnUrl.Contains("/Reportes", StringComparison.OrdinalIgnoreCase))
+        {
+            <div class="alert alert-custom-restriction text-center" role="alert" style="margin-bottom: 20px;">
+                <i class="fas fa-exclamation-triangle me-2"></i> Acceso Restringido: Debes iniciar sesión para ingresar al panel de Reportes.
+            </div>
+        }
+
+
+        @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+        {
+            <div class="text-danger text-center mb-3">@Model.ErrorMessage</div>
+        }
+
+        <form method="post">
+
+            <!-- AÑADE ESTA LÍNEA CRÍTICA: CAMPO OCULTO PARA DEVOLVER EL RETURNURL A OnPost -->
+            <input type="hidden" asp-for="ReturnUrl" />
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <!-- Correo Electrónico -->
+            <div class="form-group">
+                <label asp-for="Input.CorreoElectronico"></label>
+                <input asp-for="Input.CorreoElectronico" class="form-control" placeholder="ejemplo@correo.com" />
+                <span asp-validation-for="Input.CorreoElectronico" class="text-danger"></span>
+            </div>
+
+            <!-- Contraseña -->
+            <div class="form-group">
+                <label asp-for="Input.Contrasena"></label>
+                <input asp-for="Input.Contrasena" class="form-control" type="password" placeholder="********" />
+                <span asp-validation-for="Input.Contrasena" class="text-danger"></span>
+            </div>
+
+            <!-- Botón -->
+            <button type="submit" class="btn-login">Iniciar Sesión</button>
+
+            <!-- Enlaces -->
+            <div class="login-links">
+                <a href="/Registro">¿No tienes cuenta? Regístrate</a>
+                <a href="/LoginConductor">Acceder como Conductor</a>
+
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<!-- FOOTER COMPLETO CON ICONOS REALES -->
+<footer class="login-footer">
+    <div class="footer-content">
+        <div class="copyright-info">
+            <p>&copy; 2025 - Integradora - <a asp-area="" asp-page="/Privacy">Política de Privacidad</a></p>
+        </div>
+        <div class="social-links">
+            <!-- Icono de Facebook -->
+            <a href="#" class="social-icon" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <!-- Icono de Twitter / X -->
+            <a href="#" class="social-icon" title="Twitter / X">
+                <i class="fab fa-twitter"></i>
+            </a>
+            <!-- Icono de Instagram -->
+            <a href="#" class="social-icon" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+        </div>
+    </div>
+</footer>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

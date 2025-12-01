@@ -1,0 +1,103 @@
+﻿@page
+@model Integradora_Movia.Pages.RegistroConductorModel
+@{
+    // Ajusta si usas un _Layout diferente
+    Layout = "_Layout";
+    ViewData["Title"] = "Registro de Conductor";
+}
+
+<div class="form-container-registro">
+
+    <div class="form-box-login large-form">
+
+        <h2>Registro de Conductor</h2>
+
+        @if (!string.IsNullOrEmpty(Model.Message))
+        {
+            <div class="text-danger text-center mb-3">@Model.Message</div>
+        }
+
+        <form method="post">
+
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="registro-grid">
+
+                <div class="form-group">
+                    <label asp-for="Input.Nombres"></label>
+                    <input asp-for="Input.Nombres" class="form-control-movia" placeholder="Tus nombres" />
+                    <span asp-validation-for="Input.Nombres" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Apellidos"></label>
+                    <input asp-for="Input.Apellidos" class="form-control-movia" placeholder="Tus apellidos" />
+                    <span asp-validation-for="Input.Apellidos" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Curp"></label>
+                    <input asp-for="Input.Curp" class="form-control-movia" placeholder="Ej: ABCD000000HDFR00" />
+                    <span asp-validation-for="Input.Curp" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.NumeroTelefono"></label>
+                    <input asp-for="Input.NumeroTelefono" class="form-control-movia" placeholder="Ej: 8123456789" />
+                    <span asp-validation-for="Input.NumeroTelefono" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Tipolicencia"></label>
+                    <input asp-for="Input.Tipolicencia" class="form-control-movia" placeholder="Ej: A, B, C, D" />
+                    <span asp-validation-for="Input.Tipolicencia" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.NumeroLicencia"></label>
+                    <input asp-for="Input.NumeroLicencia" class="form-control-movia" placeholder="Ej: LIC1234567890" />
+                    <span asp-validation-for="Input.NumeroLicencia" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.CorreoElectronico"></label>
+                    <input asp-for="Input.CorreoElectronico" class="form-control-movia" placeholder="correo.conductor@ejemplo.com" />
+                    <span asp-validation-for="Input.CorreoElectronico" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Input.Vencimiento"></label>
+                    <input asp-for="Input.Vencimiento" class="form-control-movia" type="datetime-local" />                   
+                    <span asp-validation-for="Input.Vencimiento" class="text-danger"></span>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Contrasena"></label>
+                <input asp-for="Input.Contrasena" class="form-control-movia" type="password" />
+                <span asp-validation-for="Input.Contrasena" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Input.ConfirmarContrasena"></label>
+                <input asp-for="Input.ConfirmarContrasena" class="form-control-movia" type="password" />
+                <span asp-validation-for="Input.ConfirmarContrasena" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn-primary-movia full-width-btn">Registrar Conductor</button>
+
+            <div class="login-link-container mt-3">
+                <p>
+                    ¿Ya tienes una cuenta? <a asp-page="/LoginConductor" class="login-link">Inicia Sesión</a>
+                </p>
+                <p>
+                    <a asp-page="/Registro" class="login-link">Registrarse como Usuario</a>
+                </p>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

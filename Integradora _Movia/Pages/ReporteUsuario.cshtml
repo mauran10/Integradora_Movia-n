@@ -1,0 +1,548 @@
+﻿@page
+@model Integradora_Movia.Pages.ReporteUsuarioModel
+@{
+    ViewData["Title"] = "Home page";
+    // Asume que _Layout.cshtml tiene cargadas las librerías de Mapbox
+    Layout = "_Layout";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Feedback - Movía Transit</title>
+    <!-- Carga de Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <!-- Carga de Firebase SDK para Firestore -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, serverTimestamp, setLogLevel } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- 1. CONFIGURACIÓN DE FIREBASE Y AUTH ---
+        // Variables globales proporcionadas por el entorno
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : null;
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db = null;
+        let auth = null;
+        let userId = null;
+
+        const initFirebase = async () => {
+            if (!firebaseConfig) {
+                console.error("Firebase config is missing.");
+                return;
+            }
+
+            try {
+                const app = initializeApp(firebaseConfig);
+                setLogLevel('debug'); // Habilitar logs para depuración
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                // Autenticación: Usar token si está disponible, sino anónimo
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                userId = auth.currentUser?.uid || crypto.randomUUID();
+                document.dispatchEvent(new CustomEvent('firebase-ready'));
+
+            } catch (error) {
+                console.error("Error during Firebase initialization or authentication:", error);
+            }
+        };
+
+        // Inicializa Firebase al cargar el script
+        initFirebase();
+
+        // Exportar funciones y variables para ser usadas por el script principal
+        window.db = db;
+        window.auth = auth;
+        window.userId = userId;
+        window.getFirestore = getFirestore;
+        window.collection = collection;
+        window.addDoc = addDoc;
+        window.onSnapshot = onSnapshot;
+        window.query = query;
+        window.orderBy = orderBy;
+        window.serverTimestamp = serverTimestamp;
+
+    </script>
+
+    <style>
+        /* ========================================= */
+        /* 1. Variables y Configuración General      */
+        /* ========================================= */
+        :root {
+            --movia-primary: #581c87; /* Morado Oscuro (Base) */
+            --movia-hover: #4a1970; /* Morado Oscuro de Hover */
+            --movia-text: #1f2937; /* Gris Oscuro para texto general */
+            --movia-background: #f1f5f9; /* Fondo muy claro de la página */
+            /* Paleta Morada */
+            --movia-purple-dark: #3a105f; /* Fondo de la tabla */
+            --movia-purple-medium: #6d28d9; /* Botón de acción */
+            --movia-purple-light: #ede9fe; /* Fondo de tarjetas */
+            --movia-purple-accent: #8b5cf6; /* Acento */
+            /* Colores de Tags Específicos para Feedback */
+            --tag-queja: #ef4444; /* Rojo */
+            --tag-sugerencia: #f59e0b; /* Amarillo/Naranja */
+            --tag-elogio: #10b981; /* Verde */
+
+            --layout-padding-top: 20px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--movia-background);
+            color: var(--movia-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* ----------------------------------------- */
+        /* 2. Estructura y Layout                    */
+        /* ----------------------------------------- */
+
+        .main-container {
+            margin: 0 auto;
+            padding: var(--layout-padding-top) 20px 40px 20px;
+            flex-grow: 1;
+            width: 100%;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--movia-primary);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* ----------------------------------------- */
+        /* 3. Formulario de Feedback (Card)          */
+        /* ----------------------------------------- */
+        .feedback-card {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(88, 28, 135, 0.15);
+            border: 1px solid var(--movia-purple-light);
+            margin-bottom: 40px;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--movia-primary);
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--movia-purple-light);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+            .form-group label {
+                display: block;
+                font-weight: 600;
+                margin-bottom: 8px;
+                color: var(--movia-text);
+            }
+
+            .form-group input,
+            .form-group select,
+            .form-group textarea {
+                width: 100%;
+                padding: 12px 15px;
+                border: 1px solid #ccc;
+                border-radius: 8px;
+                font-size: 1rem;
+                box-sizing: border-box;
+                transition: border-color 0.3s, box-shadow 0.3s;
+                background-color: #fff;
+                color: var(--movia-text);
+            }
+
+                .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+                    border-color: var(--movia-purple-medium);
+                    box-shadow: 0 0 0 3px rgba(109, 40, 217, 0.2);
+                    outline: none;
+                }
+
+            .form-group textarea {
+                resize: vertical;
+                min-height: 120px;
+            }
+
+        /* Estilos para el botón de envío */
+        .submit-button {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--movia-purple-medium);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: background-color 0.2s, box-shadow 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+            .submit-button:hover:not(:disabled) {
+                background-color: var(--movia-primary);
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+            }
+
+            .submit-button:disabled {
+                background-color: #ccc;
+                cursor: not-allowed;
+            }
+
+        /* Mensajes de notificación */
+        .message-box {
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none; /* Oculto por defecto */
+        }
+
+        .message-success {
+            background-color: #d1fae5; /* Verde claro */
+            color: #065f46; /* Verde oscuro */
+            border: 1px solid #a7f3d0;
+        }
+
+        .message-error {
+            background-color: #fee2e2; /* Rojo claro */
+            color: #991b1b; /* Rojo oscuro */
+            border: 1px solid #fecaca;
+        }
+
+        /* ----------------------------------------- */
+        /* 4. Tabla de Feedback Reciente (Secundaria)*/
+        /* ----------------------------------------- */
+
+        .section-title-secondary {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--movia-primary);
+            margin-top: 20px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+
+            .data-table th, .data-table td {
+                padding: 12px 15px;
+                text-align: left;
+                border-bottom: 1px solid #e0e7ff;
+            }
+
+            .data-table th {
+                background-color: var(--movia-primary);
+                font-weight: 600;
+                color: white;
+                font-size: 0.95rem;
+                text-transform: uppercase;
+                letter-spacing: 0.05em;
+            }
+
+            .data-table td {
+                color: white;
+                font-size: 0.95rem;
+            }
+
+            .data-table tr {
+                background-color: var(--movia-purple-dark);
+            }
+
+                .data-table tr:hover {
+                    background-color: var(--movia-hover);
+                    cursor: pointer;
+                }
+
+        /* Insignias/Tags */
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .tag-Queja {
+            background-color: var(--tag-queja);
+        }
+
+        .tag-Sugerencia {
+            background-color: var(--tag-sugerencia);
+        }
+
+        .tag-Elogio {
+            background-color: var(--tag-elogio);
+        }
+
+        /* Estilo para el campo de Ruta/Bus opcional */
+        #route-bus-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+      
+    </style>
+</head>
+<body>
+
+    <main class="main-container">
+
+        <div class="page-header">
+            <h1 class="page-title">Comparte tu Experiencia con Movía Transit</h1>
+            <p class="page-subtitle">Tu opinión nos ayuda a mejorar. Envíanos tu queja, sugerencia o elogio.</p>
+        </div>
+
+        <!-- ================================================= -->
+        <!-- FORMULARIO DE REGISTRO DE FEEDBACK -->
+        <!-- ================================================= -->
+        <div class="feedback-card">
+            <h2 class="form-title">Registro de Comentario</h2>
+
+            <form id="feedback-form">
+
+                <div class="form-group">
+                    <label for="feedback-type">Tipo de Retroalimentación (*)</label>
+                    <select id="feedback-type" name="feedback-type" required>
+                        <option value="" disabled selected>Selecciona un tipo de comentario</option>
+                        <option value="Queja">Queja</option>
+                        <option value="Sugerencia">Sugerencia</option>
+                        <option value="Elogio">Elogio</option>
+                    </select>
+                </div>
+
+                <div id="route-bus-info">
+                    <div class="form-group">
+                        <label for="route">Ruta (Opcional)</label>
+                        <input type="text" id="route" name="route" placeholder="Ej: Ruta A, Ruta B...">
+                    </div>
+                    <div class="form-group">
+                        <label for="bus">Número de Autobús (Opcional)</label>
+                        <input type="text" id="bus" name="bus" placeholder="Ej: 301, 450, etc.">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="comment">Tu Comentario (*)</label>
+                    <textarea id="comment" name="comment" required placeholder="Describe tu experiencia de manera clara y concisa."></textarea>
+                </div>
+
+                <div id="status-message" class="message-box"></div>
+
+                <button type="submit" id="submit-button" class="submit-button">
+                    <i data-lucide="send" width="20" height="20"></i> Enviar Feedback
+                </button>
+            </form>
+        </div>
+
+        <!-- ================================================= -->
+        <!-- TABLA DE FEEDBACK RECIENTE (Visualización) -->
+        <!-- ================================================= -->
+        <h2 class="section-title-secondary">Últimos Comentarios Públicos</h2>
+        <div class="report-details-container" style="padding: 15px; background-color: var(--movia-purple-dark); border: none;">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Tipo</th>
+                        <th>Ruta/Bus</th>
+                        <th>Comentario</th>
+                    </tr>
+                </thead>
+                <tbody id="feedback-table-body">
+                    <!-- Los datos de Firestore se cargarán aquí -->
+                    <tr><td colspan="4" style="text-align: center; color: #a5a5a5;">Cargando comentarios recientes...</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+    </main>
+
+    <script type="module">
+        // --- 2. REFERENCIAS DEL DOM ---
+        const form = document.getElementById('feedback-form');
+        const statusMessage = document.getElementById('status-message');
+        const submitButton = document.getElementById('submit-button');
+        const feedbackTableBody = document.getElementById('feedback-table-body');
+
+        // --- 3. CONFIGURACIÓN DE FIRESTORE ---
+        const APP_ID = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        const getCollectionRef = () => {
+            // Usa la colección pública para el feedback de usuarios
+            if (window.db) {
+                return window.collection(window.db, `/artifacts/${APP_ID}/public/data/user_feedback`);
+            }
+            return null;
+        };
+
+        // Función para mostrar mensajes de estado
+        const showMessage = (message, type) => {
+            statusMessage.textContent = message;
+            statusMessage.className = `message-box message-${type}`;
+            statusMessage.style.display = 'block';
+            setTimeout(() => {
+                statusMessage.style.display = 'none';
+            }, 5000);
+        };
+
+        // Función para formatear la fecha
+        const formatDate = (timestamp) => {
+            if (!timestamp) return 'N/A';
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            return date.toLocaleDateString('es-ES');
+        };
+
+        // --- 4. FUNCIÓN DE ENVÍO DE DATOS A FIRESTORE ---
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+
+            const type = document.getElementById('feedback-type').value;
+            const route = document.getElementById('route').value.trim();
+            const bus = document.getElementById('bus').value.trim();
+            const comment = document.getElementById('comment').value.trim();
+
+            if (!type || !comment) {
+                showMessage("Por favor, completa los campos obligatorios (*).", 'error');
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i data-lucide="loader-circle" class="animate-spin" width="20" height="20"></i> Enviando...';
+
+            try {
+                const feedbackRef = getCollectionRef();
+                if (!feedbackRef) throw new Error("Database not initialized.");
+
+                const newFeedback = {
+                    type: type,
+                    route: route || 'N/A', // Usar N/A si está vacío
+                    bus: bus || 'N/A',
+                    comment: comment,
+                    userId: window.userId, // ID del usuario anónimo/autenticado
+                    timestamp: window.serverTimestamp() // Fecha de registro
+                };
+
+                await window.addDoc(feedbackRef, newFeedback);
+
+                // Éxito: limpiar formulario y mostrar mensaje
+                form.reset();
+                showMessage("¡Gracias! Tu comentario ha sido registrado con éxito.", 'success');
+
+            } catch (error) {
+                console.error("Error al enviar el feedback:", error);
+                showMessage("Ocurrió un error al enviar tu comentario. Intenta de nuevo.", 'error');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i data-lucide="send" width="20" height="20"></i> Enviar Feedback';
+                if (typeof lucide !== 'undefined') lucide.createIcons(); // Re-renderizar iconos después del cambio de texto
+            }
+        };
+
+        // --- 5. FUNCIÓN PARA CARGAR DATOS EN TIEMPO REAL CON ON SNAPSHOT ---
+        const loadRecentFeedback = () => {
+            const feedbackRef = getCollectionRef();
+            if (!feedbackRef) return;
+
+            // Consulta: Obtener los últimos 10 comentarios ordenados por fecha descendente
+            const q = window.query(feedbackRef, window.orderBy("timestamp", "desc"));
+
+            // onSnapshot escucha cambios en tiempo real
+            window.onSnapshot(q, (snapshot) => {
+                feedbackTableBody.innerHTML = ''; // Limpiar la tabla
+
+                if (snapshot.empty) {
+                    feedbackTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #a5a5a5;">Aún no hay comentarios registrados. ¡Sé el primero!</td></tr>';
+                    return;
+                }
+
+                snapshot.forEach((doc) => {
+                    const item = doc.data();
+                    const row = feedbackTableBody.insertRow();
+
+                    // Columna Fecha
+                    row.insertCell().textContent = formatDate(item.timestamp);
+
+                    // Columna Tipo (con Tag)
+                    row.insertCell().innerHTML = `<span class="tag tag-${item.type}">${item.type}</span>`;
+
+                    // Columna Ruta / Autobús
+                    row.insertCell().textContent = `${item.route} ${item.bus !== 'N/A' ? `(${item.bus})` : ''}`;
+
+                    // Columna Comentario (Truncar para la vista previa)
+                    const maxLength = 60;
+                    const commentCell = row.insertCell();
+                    commentCell.textContent = item.comment.length > maxLength
+                                                ? item.comment.substring(0, maxLength) + '...'
+                                                : item.comment;
+                });
+                if (typeof lucide !== 'undefined') lucide.createIcons();
+            }, (error) => {
+                console.error("Error al escuchar cambios en Firestore:", error);
+                feedbackTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #a5a5a5;">Error al cargar comentarios.</td></tr>';
+            });
+        };
+
+        // --- 6. INICIALIZACIÓN ---
+        document.addEventListener('firebase-ready', () => {
+            // 1. Asignar listener al formulario
+            form.addEventListener('submit', handleSubmit);
+
+            // 2. Cargar tabla con datos en tiempo real
+            loadRecentFeedback();
+
+            // 3. Inicializar iconos
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+
+        // En caso de que el evento 'firebase-ready' no se dispare (entorno sin variables globales)
+        window.addEventListener('load', () => {
+            if (!window.db) {
+                // Si Firebase no está inicializado, usar un mensaje de error o datos simulados
+                feedbackTableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #a5a5a5;">Base de datos no disponible. Muestra de datos simulados.</td></tr>';
+            }
+            if (typeof lucide !== 'undefined') lucide.createIcons();
+        });
+
+
+    </script>
+
+</body>
+</html>

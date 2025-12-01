@@ -1,0 +1,85 @@
+﻿@page
+@model Integradora_Movia.Pages.Admin.ConductoresModel
+@{
+    Layout = "_Layout";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/admin.css" />
+}
+
+@section CustomHeader {
+    <header>
+        <nav class="navbar">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <a class="navbar-brand" asp-area="" asp-page="/Index">
+                    <img src="~/images/movia_logo.png" alt="MOVIA Logo" class="logo">
+                </a>
+
+          
+            </div>
+        </nav>
+    </header>
+}
+
+<div class="admin-container">
+    <h2>Conductores Registrados</h2>
+
+    @if (!string.IsNullOrEmpty(Model.Message))
+    {
+        <div class="alert alert-danger">@Model.Message</div>
+    }
+
+    <div class="d-flex justify-content-end mb-3">
+        <a asp-page="AgregarConductor" class="btn btn-success">
+            <i class="fas fa-plus"></i>  Alta a conductor
+        </a>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Correo</th>
+                <th>Licencia</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var c in Model.Conductores)
+            {
+                <tr>
+                    <td>@c.IdConductor</td>
+                    <td>@c.Nombres</td>
+                    <td>@c.Apellidos</td>
+                    <td>@c.CorreoElectronico</td>
+                    <td>@c.NumeroLicencia</td>
+
+                    <td>
+                        <!-- EDITAR -->
+                        <a asp-page="/Admin/EditarConductor"
+                           asp-route-id="@c.IdConductor"
+                           class="btn btn-warning btn-sm">
+                            Editar
+                        </a>
+
+                        <!-- ELIMINAR -->
+                        <form method="post"
+                              asp-page-handler="Eliminar"
+                              asp-route-id="@c.IdConductor"
+                              style="display:inline">
+
+                            <button class="btn btn-danger btn-sm">
+                                Eliminar
+                            </button>
+                        </form>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

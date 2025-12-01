@@ -1,0 +1,70 @@
+﻿@page
+@model Integradora_Movia.Pages.Admin.AgregarConductorModel
+
+<h3> Agregar Nuevo Conductor</h3>
+
+<form method="post">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Conductor.Nombres"></label>
+                <input asp-for="Conductor.Nombres" class="form-control" />
+                <span asp-validation-for="Conductor.Nombres" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Conductor.Apellidos"></label>
+                <input asp-for="Conductor.Apellidos" class="form-control" />
+                <span asp-validation-for="Conductor.Apellidos" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Conductor.CorreoElectronico"></label>
+                <input asp-for="Conductor.CorreoElectronico" class="form-control" />
+                <span asp-validation-for="Conductor.CorreoElectronico" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Conductor.Curp"></label>
+                <input asp-for="Conductor.Curp" class="form-control" />
+                <span asp-validation-for="Conductor.Curp" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Conductor.NumeroTelefono"></label>
+                <input asp-for="Conductor.NumeroTelefono" class="form-control" />
+                <span asp-validation-for="Conductor.NumeroTelefono" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label asp-for="Conductor.NumeroLicencia"></label>
+                <input asp-for="Conductor.NumeroLicencia" class="form-control" />
+                <span asp-validation-for="Conductor.NumeroLicencia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Conductor.Vencimiento">Vencimiento Licencia</label>
+                <input type="date" asp-for="Conductor.Vencimiento" class="form-control" />
+                <span asp-validation-for="Conductor.Vencimiento" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Conductor.Tipolicencia">Tipo de Licencia</label>
+                <input asp-for="Conductor.Tipolicencia" class="form-control" />
+                <span asp-validation-for="Conductor.Tipolicencia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Conductor.Contrasena"></label>
+                <input type="password" asp-for="Conductor.Contrasena" class="form-control" />
+                <span asp-validation-for="Conductor.Contrasena" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Conductor.ConfirmarContrasena"></label>
+                <input type="password" asp-for="Conductor.ConfirmarContrasena" class="form-control" />
+                <span asp-validation-for="Conductor.ConfirmarContrasena" class="text-danger"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <button type="submit" class="btn btn-success"> Registrar Conductor</button>
+        <a asp-page="Conductores" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>

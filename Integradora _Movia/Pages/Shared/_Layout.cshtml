@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Integradora</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/admin.css" asp-append-version="true" />
+
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+
+    <!-- 🔥 AQUI AGREGO LA MAGIA -->
+    @if (IsSectionDefined("CustomHeader"))
+    {
+        @RenderSection("CustomHeader", required: false)
+    }
+    else
+    {
+        <!-- HEADER NORMAL -->
+        <header>
+            <nav class="navbar">
+                <div class="container-fluid d-flex justify-content-between align-items-center">
+
+                    <a class="navbar-brand" asp-area="" asp-page="/Index">
+                        <img src="~/images/movia_logo.png" alt="MOVIA Logo" class="logo">
+                    </a>
+
+                    <ul class="navbar-nav flex-row flex-grow-1 justify-content-center NavLinksCentrado">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/Mapa"> Ver Mapa</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/Reportes"> Reportes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/Index" asp-fragment="quienes-somos">Quienes somos</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/Index" asp-fragment="mision">Misión</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-page="/Index" asp-fragment="movia_vision">Visión</a>
+                        </li>
+                        
+                    </ul>
+
+                    <div class="AuthContainer">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <form method="post" asp-page="/Logout" class="form-inline">
+                                <button type="submit" class="nav-link btn btn-link logout-link">
+                                    Cerrar Sesión
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a class="nav-link logout-link" asp-area="" asp-page="/Login">
+                                <i class="fas fa-user"></i>
+                            </a>
+                        }
+                    </div>
+
+                </div>
+            </nav>
+        </header>
+    }
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="login-footer">
+        <div class="footer-content">
+            <div class="copyright-info">
+                <p>&copy; 2025 - Integradora - <a asp-area="" asp-page="/Privacy">Política de Privacidad</a></p>
+            </div>
+            <div class="social-links">
+                <a href="#" class="social-icon"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

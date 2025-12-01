@@ -1,0 +1,442 @@
+﻿@page
+@model Integradora_Movia.Pages.MapaModel
+@{
+    ViewData["Title"] = "Mapa MOVIA";
+    Layout = "_Layout";
+}
+
+<div id="map-main-container">
+
+    <button class="toggle" id="themeToggle">☀️</button>
+    <button class="locate" id="locateBtn">📍</button>
+    <button class="locate-bus" id="trackBusBtn">🚌 </button>
+
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Buscar lugar, calle o punto de interés..." autocomplete="off" />
+        <div id="suggestions"></div>
+    </div>
+
+    <div id="map-main"></div> <div class="status" id="status">Obteniendo ubicación...</div>
+</div>
+
+<div class="hero-section">
+</div>
+@section Scripts {
+    <script>
+        // ==========================================================
+        // 1. VARIABLES GLOBALES
+        // ==========================================================
+        mapboxgl.accessToken = "pk.eyJ1IjoieWF5bzg1IiwiYSI6ImNtaDV1dnF4YzBjanAybG9lbTYyZXJxdTUifQ.CzX-g67-XRtZzMig8ujCFQ";
+        const MOVIA_CENTER = [-100.3161, 25.6866]; // Monterrey, NL
+
+        let isDarkMode = false;
+        let mapMain;
+        let userMarkerMain;
+        let busMarker;
+        let lastCoordsMain = MOVIA_CENTER;
+        let popupMain;
+        let debounceTimer;
+        let destinationMarker;
+
+        // --- RUTA Y RASTREO ---
+        const ROUTE_SOURCE_ID = 'mapbox-route-source';
+        const ROUTE_LAYER_ID = 'mapbox-route-layer';
+        let currentRouteGeojson = null;
+
+        // URL de la API del bus
+        const BUS_API_URL = "https://moviatrackapi-acanbgcdfvc9hfex.westus2-01.azurewebsites.net/gps";
+        let isTracking = false;
+        // ⭐️ NUEVAS BANDERAS PARA EL CONTROL DE UBICACIÓN
+        let hasValidBusLocation = false; // TRUE una vez que se ha obtenido la primera ubicación real de la API
+        let isInitialCenter = true; // TRUE hasta que el mapa se centra por primera vez en la ubicación real
+
+        const routeData = {
+            'type': 'FeatureCollection',
+            'features': [{
+                'type': 'Feature',
+                'geometry': {
+                    'type': 'LineString',
+                    'coordinates': []
+                }
+            }]
+        };
+
+        // ==========================================================
+        // 2. FUNCIONES DE UTILIDAD
+        // ==========================================================
+
+        async function fetchSuggestions(query) {
+            const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(query)}.json?autocomplete=true&proximity=${MOVIA_CENTER.join()}&types=poi,place,neighborhood,address,locality&access_token=${mapboxgl.accessToken}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.features;
+        }
+
+        function createDestinationMarker(coords) {
+            if (destinationMarker) {
+                destinationMarker.remove();
+            }
+            const destEl = document.createElement('div');
+            destEl.style.width = '15px';
+            destEl.style.height = '15px';
+            destEl.style.borderRadius = '50%';
+            destEl.style.backgroundColor = '#8c73b5';
+            destEl.style.boxShadow = '0 0 10px rgba(140,115,181,0.7)';
+            destinationMarker = new mapboxgl.Marker(destEl).setLngLat(coords).addTo(mapMain);
+        }
+
+        async function getAndDrawRoute(origin, destination) {
+            const coords = `${origin[0]},${origin[1]};${destination[0]},${destination[1]}`;
+            const profile = 'driving';
+            const url = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${coords}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                if (!data || !data.routes || data.routes.length === 0) {
+                    console.error("No se encontró una ruta de dirección.");
+                    currentRouteGeojson = null;
+                    if (mapMain.getLayer(ROUTE_LAYER_ID)) mapMain.removeLayer(ROUTE_LAYER_ID);
+                    if (mapMain.getSource(ROUTE_SOURCE_ID)) mapMain.removeSource(ROUTE_SOURCE_ID);
+                    return;
+                }
+
+                const route = data.routes[0].geometry;
+                const geojson = {
+                    'type': 'Feature',
+                    'properties': {},
+                    'geometry': route
+                };
+
+                currentRouteGeojson = geojson;
+
+                if (mapMain.getSource(ROUTE_SOURCE_ID)) {
+                    mapMain.getSource(ROUTE_SOURCE_ID).setData(geojson);
+                } else {
+                    mapMain.addSource(ROUTE_SOURCE_ID, {
+                        'type': 'geojson',
+                        'data': geojson
+                    });
+
+                    mapMain.addLayer({
+                        'id': ROUTE_LAYER_ID,
+                        'type': 'line',
+                        'source': ROUTE_SOURCE_ID,
+                        'layout': {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        'paint': {
+                            'line-color': '#3E8E7E',
+                            'line-width': 4,
+                            'line-opacity': 0.8
+                        }
+                    }, 'route');
+                }
+
+            } catch (error) {
+                console.error("Error al obtener la ruta de dirección:", error);
+            }
+        }
+
+        // ==========================================================
+        // 3. RASTREO Y TRAYECTORIA DEL AUTOBÚS
+        // ==========================================================
+
+               // ==========================================================
+        // 3. RASTREO Y TRAYECTORIA DEL AUTOBÚS (NUEVA VERSIÓN XHR)
+        // ==========================================================
+               // ==========================================================
+        // 3. RASTREO Y TRAYECTORIA DEL AUTOBÚS (NUEVA VERSIÓN XHR)
+        // ==========================================================
+        async function fetchBusLocation() {
+            if (!isTracking || !mapMain.loaded()) {
+                setTimeout(fetchBusLocation, 3000);
+                return;
+            }
+
+            console.log("-> 1. Iniciando petición fetch a la API...");
+
+            try {
+                const response = await fetch(BUS_API_URL);
+
+                if (!response.ok) {
+                    console.warn(`-> ERROR: Respuesta no válida (Status ${response.status}). Reintentando...`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log("-> 2. JSON leído. Datos:", data);
+
+                const busLat = parseFloat(data.lat);
+                const busLng = parseFloat(data.lng);
+
+                if (isNaN(busLat) || isNaN(busLng) || busLat === 0 || busLng === 0) {
+                    console.warn("-> 3. Coordenadas Inválidas/Cero. Reintentando...");
+                    return;
+                }
+
+                // ----------------------------------------------------
+                // CÓDIGO DE ACTUALIZACIÓN
+                // ----------------------------------------------------
+                console.log(`-> 4. Coordenadas Válidas: Lng=${busLng}, Lat=${busLat}. Actualizando marcador.`);
+                const busCoords = [busLng, busLat];
+
+                if (busMarker) {
+                    busMarker.setLngLat(busCoords);
+                    hasValidBusLocation = true;
+                }
+
+                // Lógica de centrado inicial:
+                if (isInitialCenter) {
+                    mapMain.flyTo({ center: busCoords, zoom: 15, essential: true });
+                    isInitialCenter = false;
+                }
+
+                // 🛑 Lógica de la trayectoria: AHORA SOLO TIENE UN PUNTO (UBICACIÓN ACTUAL)
+                routeData.features[0].geometry.coordinates = [busCoords];
+                if (mapMain.getSource('bus-route')) {
+                    mapMain.getSource('bus-route').setData(routeData);
+                }
+                // ----------------------------------------------------
+
+            } catch (error) {
+                console.error("-> ERROR FATAL: Fallo en la conexión o CORS:", error);
+            } finally {
+                setTimeout(fetchBusLocation, 1000);
+            }
+        }
+        // ==========================================================
+        // 4. INICIALIZACIÓN DEL MAPA PRINCIPAL
+        // ==========================================================
+
+                // ==========================================================
+        // 4. INICIALIZACIÓN DEL MAPA PRINCIPAL (CORREGIDA)
+        // ==========================================================
+
+        function initMainMap() {
+            console.log("-> A. Iniciando configuración del mapa Mapbox...");
+
+            mapMain = new mapboxgl.Map({
+                container: 'map-main',
+                style: "mapbox://styles/mapbox/light-v11",
+                center: MOVIA_CENTER,
+                zoom: 13,
+                interactive: true
+            });
+
+            mapMain.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
+
+            // 1. MARCADOR DEL USUARIO (BASE)
+            const markerEl = document.createElement('div');
+            markerEl.style.width = '15px';
+            markerEl.style.height = '15px';
+            markerEl.style.borderRadius = '50%';
+            markerEl.style.backgroundColor = '#5b4bff';
+            markerEl.style.boxShadow = '0 0 10px rgba(91,75,255,0.7)';
+            userMarkerMain = new mapboxgl.Marker(markerEl).setLngLat(MOVIA_CENTER).addTo(mapMain);
+
+            // 2. MARCADOR INICIAL DEL BUS (SOLUCIÓN: SIN POPUP INICIAL)
+            const busEl = document.createElement('div');
+            busEl.innerHTML = '<span style="font-size: 28px; line-height: 1; display: block;">🚌</span>';
+            busMarker = new mapboxgl.Marker(busEl)
+                .setLngLat(MOVIA_CENTER) // Posición inicial
+                // .setPopup(new mapboxgl.Popup().setHTML("<strong>Autobús Movia Activo</strong>")) // ❌ ¡COMENTADO/ELIMINADO!
+                .addTo(mapMain);
+
+
+            // Cargar Fuente y Capa de la Trayectoria del Autobús
+            mapMain.on('load', () => {
+                console.log("-> B. EVENTO DE MAPA 'LOAD' DISPARADO. El mapa está listo."); // Debug B
+
+                mapMain.addSource('bus-route', {
+                    'type': 'geojson',
+                    'data': routeData
+                });
+
+                mapMain.addLayer({
+                    'id': 'route',
+                    'type': 'line',
+                    'source': 'bus-route',
+                    'layout': {
+                        'line-join': 'round',
+                        'line-cap': 'round'
+                    },
+                    'paint': {
+                        'line-color': '#ff6347',
+                        'line-width': 4
+                    }
+                });
+
+                isTracking = true;
+                fetchBusLocation(); // INICIA EL RASTREO DESPUÉS DE LA CARGA
+            });
+
+
+            // Geolocalización del Usuario...
+            if ("geolocation" in navigator) {
+                navigator.geolocation.watchPosition(
+                    (pos) => {
+                        const lng = pos.coords.longitude;
+                        const lat = pos.coords.latitude;
+                        lastCoordsMain = [lng, lat];
+                        userMarkerMain.setLngLat(lastCoordsMain);
+                        document.getElementById("status").textContent = `📍 Lat: ${lat.toFixed(5)}, Lng: ${lng.toFixed(5)}`;
+                    },
+                    (err) => {
+                        document.getElementById("status").textContent = "No se pudo obtener la ubicación.";
+                        console.error("Error ubicación:", err);
+                    },
+                    { enableHighAccuracy: true, maximumAge: 1000 }
+                );
+            }
+        }
+
+        // ==========================================================
+        // 5. EVENT HANDLERS
+        // ==========================================================
+        document.addEventListener('DOMContentLoaded', (event) => {
+
+            // EJECUTAR LA INICIALIZACIÓN DEL MAPA
+            initMainMap();
+
+            // Botón de centrado de usuario
+            document.getElementById("locateBtn").addEventListener("click", () => {
+                if (lastCoordsMain) mapMain.flyTo({ center: lastCoordsMain, zoom: 14, essential: true });
+            });
+
+            // LÓGICA DEL BOTÓN CENTRAR BUS
+            document.getElementById("trackBusBtn").addEventListener("click", () => {
+                // ⭐️ Solo centrar si ya tenemos una ubicación válida (no la de Monterrey)
+                if (hasValidBusLocation) {
+                    const busCoords = busMarker.getLngLat().toArray();
+                    mapMain.flyTo({ center: busCoords, zoom: 15, essential: true });
+
+                    if (lastCoordsMain) {
+                        getAndDrawRoute(lastCoordsMain, busCoords);
+                    }
+                } else {
+                    // Re-introducimos la alerta para evitar centrar en Monterrey
+                    alert("Esperando la primera ubicación del autobús. Intente de nuevo en un momento.");
+                }
+            });
+
+
+            // Botón de cambio de tema y recarga de capas
+            document.getElementById("themeToggle").addEventListener("click", () => {
+                isDarkMode = !isDarkMode;
+                document.body.classList.toggle("dark", isDarkMode);
+                document.getElementById("themeToggle").textContent = isDarkMode ? "🌙" : "☀️";
+                const styleUrl = isDarkMode ? "mapbox://styles/mapbox/dark-v11" : "mapbox://styles/mapbox/light-v11";
+
+                mapMain.setStyle(styleUrl);
+
+                // Reiniciar la trayectoria del bus al cambiar de estilo
+                routeData.features[0].geometry.coordinates = [];
+
+                mapMain.on("style.load", () => {
+                    // Re-agregar todas las fuentes y capas de datos necesarias
+                    mapMain.addSource('bus-route', { 'type': 'geojson', 'data': routeData });
+                    mapMain.addLayer({
+                        'id': 'route', 'type': 'line', 'source': 'bus-route',
+                        'layout': { 'line-join': 'round', 'line-cap': 'round' },
+                        'paint': { 'line-color': '#ff6347', 'line-width': 4 }
+                    });
+
+                    if (currentRouteGeojson) {
+                        mapMain.addSource(ROUTE_SOURCE_ID, { 'type': 'geojson', 'data': currentRouteGeojson });
+                        mapMain.addLayer({
+                            'id': ROUTE_LAYER_ID, 'type': 'line', 'source': ROUTE_SOURCE_ID,
+                            'layout': { 'line-join': 'round', 'line-cap': 'round' },
+                            'paint': { 'line-color': '#3E8E7E', 'line-width': 4, 'line-opacity': 0.8 }
+                        }, 'route');
+                    }
+
+                    // Re-agregar marcadores
+                    if (lastCoordsMain) userMarkerMain.setLngLat(lastCoordsMain).addTo(mapMain);
+                    if (busMarker) busMarker.addTo(mapMain);
+                    if (destinationMarker) destinationMarker.addTo(mapMain);
+                    if (popupMain) popupMain.addTo(mapMain);
+                });
+            });
+
+            // Lógica de búsqueda (no modificada)
+            const searchInput = document.getElementById("searchInput");
+            const suggestions = document.getElementById("suggestions");
+
+            searchInput.addEventListener("input", () => {
+                clearTimeout(debounceTimer);
+                const query = searchInput.value.trim();
+                if (query.length < 2) {
+                    suggestions.innerHTML = "";
+                    return;
+                }
+
+                debounceTimer = setTimeout(async () => {
+                    const features = await fetchSuggestions(query);
+                    if (features.length === 0) {
+                        suggestions.innerHTML = "<div class='suggestion'>Sin resultados</div>";
+                        return;
+                    }
+
+                    const sorted = features.sort((a, b) => {
+                        const aIsMTY = a.place_name.toLowerCase().includes("monterrey");
+                        const bIsMTY = b.place_name.toLowerCase().includes("monterrey");
+                        return bIsMTY - aIsMTY;
+                    });
+
+                    suggestions.innerHTML = sorted.slice(0, 6)
+                        .map(f => `<div class="suggestion" data-lng="${f.center[0]}" data-lat="${f.center[1]}" data-name="${f.text}">${f.place_name}</div>`)
+                        .join("");
+                }, 400);
+            });
+
+            suggestions.addEventListener("click", (e) => {
+                if (!e.target.classList.contains("suggestion")) return;
+                const lng = parseFloat(e.target.dataset.lng);
+                const lat = parseFloat(e.target.dataset.lat);
+                const name = e.target.dataset.name;
+                const coords = [lng, lat];
+
+                if (popupMain) popupMain.remove();
+                popupMain = new mapboxgl.Popup({ offset: 25 })
+                    .setLngLat(coords)
+                    .setHTML(`<strong>${name}</strong>`)
+                    .addTo(mapMain);
+
+                mapMain.flyTo({ center: coords, zoom: 15 });
+
+                createDestinationMarker(coords);
+                getAndDrawRoute(lastCoordsMain, coords);
+
+                suggestions.innerHTML = "";
+                searchInput.value = e.target.textContent;
+            });
+
+            searchInput.addEventListener("keydown", async (e) => {
+                if (e.key === "Enter") {
+                    const query = searchInput.value.trim();
+                    if (!query) return;
+                    const features = await fetchSuggestions(query);
+                    if (features.length > 0) {
+                        const { center, text } = features[0];
+                        const coords = center;
+
+                        if (popupMain) popupMain.remove();
+                        popupMain = new mapboxgl.Popup({ offset: 25 })
+                            .setLngLat(coords)
+                            .setHTML(`<strong>${text}</strong>`)
+                            .addTo(mapMain);
+
+                        mapMain.flyTo({ center: coords, zoom: 15 });
+
+                        createDestinationMarker(coords);
+                        getAndDrawRoute(lastCoordsMain, coords);
+                    }
+                    suggestions.innerHTML = "";
+                }
+            });
+        });
+    </script>
+}

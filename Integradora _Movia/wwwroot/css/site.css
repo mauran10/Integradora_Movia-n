@@ -1,0 +1,2033 @@
+﻿
+
+
+/* --- AJUSTES EN EL CONTENEDOR PRINCIPAL --- */
+main {
+    /* Deshabilitar cualquier scroll interno no deseado */
+    overflow-x: hidden;
+    /* Asegurar que el padding superior sea cero (la navbar es fija) */
+    padding-top: 0;
+    /* Importante: permite a los hijos posicionarse relativamente */
+    position: relative;
+    /* Asegura que el footer se pegue a la última sección de contenido */
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+    
+}
+
+
+/* ========================================================== */
+/* ESTILOS DE LA BARRA DE NAVEGACIÓN (HEADER) */
+/* ========================================================== */
+
+/* --- 1. CONTENEDOR PRINCIPAL (FIJO) --- */
+header {
+    /* Mantenemos el header fijo en la capa superior de la página */
+    position: relative;
+    top: 0px;
+    left: 0;
+    width: 100%;
+    z-index: 10000;
+    /* Hacemos el fondo del header transparente para que solo se vea la barra flotante */
+    background-color: transparent;
+    padding: 0px;
+}
+
+/* --- 2. BARRA DE NAVEGACIÓN FLOTANTE (Navbar) --- */
+.navbar {
+    /* Centrado y despegado de arriba */
+    position: relative;
+    margin: 0; /* Centrado horizontal */
+    /* ⚠️ FONDO BORROSO (Glassmorphism) */
+    background-color: #433066; /* Un tono de púrpura de MOVIA */
+    backdrop-filter: blur(26px);
+    /* Sombra para que se vea flotante */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    /* Asegurar que el contenido interno de la navbar se ajuste */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+    /* Asegura que los enlaces sean usables (aunque ya deberían serlo con z-index: 999) */
+    .navbar a {
+        pointer-events: auto;
+    }
+
+    /* Contenedor de los enlaces para el efecto de fondo */
+    .navbar .container-fluid {
+        display: flex;
+        justify-content: space-between; /* Espacia el logo, los links y el ícono */
+        align-items: center;
+    }
+
+/* Estilo de los enlaces */
+.navbar-nav .nav-link {
+    color: white;
+    padding: 8px 15px;
+    border-radius: 5px; /* Bordes redondeados */
+    text-decoration: none;
+    margin: 0 5px;
+    transition:all 1s ease;
+}
+
+/* Si el icono estaba muy a la derecha, quizás necesites ajustar el contenedor */
+.nav-container {
+    display: flex;
+    justify-content: flex-end; /* Para mover elementos al final */
+    align-items: center;
+}
+
+.logout-link {
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px; /* Bordes redondeados */
+    text-decoration: none;
+    margin: 0 5px;
+    transition: all 1s ease;
+}
+
+.logout-link:hover {
+    background-color: rgba(123, 74, 244, 0.7);
+    color:white;
+    transition: 1s;
+}
+
+.nav-link:hover {
+    background-color: rgba(123, 74, 244, 0.7);
+    transition: 1s;
+}
+
+/* Estilo del ícono de perfil */
+.profile-icon i {
+    color: white;
+    font-size: 30px; /* Tamaño del ícono */
+}
+
+.navbar-brand .logo {
+    margin:3px 0px;
+    height: 35px; /* Ajusta esta altura según tu logo y diseño */
+    width: auto; /* Mantiene la proporción de la imagen */
+    max-width: 150px; /* Por si el logo es muy ancho */
+}
+
+/* Este es el contenedor que aloja el ícono o el botón de Cerrar Sesión */
+.AuthContainer {
+    /* Define un ancho fijo para el contenedor. 
+       Ajusta este valor para que quepa la palabra "Cerrar Sesión" cómodamente. */
+    min-width: 120px;
+    /* Asegura que el contenido esté alineado a la derecha dentro de su propio contenedor */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0px 10px;
+}
+
+/*CCS PARA ANUNCIO DE ALERTA DE REPORTES*/
+
+.alert-custom-restriction {
+    /* Color de fondo: Un morado muy claro, casi lavanda */
+    background-color: #e5e0f9;
+    /* Borde: Morado medio */
+    border: 1px solid #7b62cc;
+    /* Color del texto: Morado oscuro */
+    color: #3f3174;
+    /* Sombras/Esquinas */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* Negrita en el texto de la alerta */
+    font-weight: 500;
+    padding: 1.25rem;
+}
+
+    /* Estilo para el ícono de advertencia dentro de la alerta */
+    .alert-custom-restriction .fas.fa-exclamation-triangle {
+        color: #5d40a0; /* Color morado para el ícono */
+        font-size: 1.2rem;
+    }
+    
+
+.logo-movia {
+    color: white;
+}
+
+h2 {
+    text-align: center;
+    color: white;
+    position: relative;
+    z-index: 5;
+}
+
+.hero-section h1.logo-movia {
+    font-size: 80px;
+    font-weight: 900;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+}
+
+
+.hero-section-new {
+    /* Altura total de la ventana menos la altura del header (aprox. 70px) */
+    height:90vh;
+    background-image: url('../images/movia_back.jpg'); /* ⚠️ Revisa la ruta */
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: white;
+    position: relative;
+    z-index: 1;
+}
+    .hero-section-new::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.45); /* Capa oscura */
+        z-index: 1;
+    }
+/* Contenido de texto y botones */
+.hero-content {
+    position: relative;
+    z-index: 2; /* Encima de la capa oscura */
+    padding-left: 10%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column; /* Apila el título, subtítulo y luego los botones */
+    align-items: flex-start;
+}
+
+.hero-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.btn-primary-hero, .btn-secondary-hero {
+    display: inline-block;
+    padding: 12px 30px;
+    margin-top: 20px;
+    margin-right: 15px; /* Espacio entre los dos botones */
+    border-radius: 8px; /* Bordes ligeramente redondeados */
+    text-decoration: none; /* Quitar el subrayado del enlace */
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+    cursor: pointer;
+    text-align: center;
+}
+
+.btn-primary-hero {
+    background-color: transparent; /* Fondo transparente */
+    color: white; /* Texto blanco para el fondo oscuro de la imagen */
+    border: 2px solid white;
+}
+
+    .btn-primary-hero:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Ligero brillo blanco */
+        color: white;
+        border-color: white;
+        
+    }
+
+/* ============================================== */
+/* BOTÓN SECUNDARIO (Contorno Blanco/Claro) */
+/* Este se usa para "Ver Mapa en Vivo" */
+/* ============================================== */
+.btn-secondary-hero{
+    background-color: transparent; /* Fondo transparente */
+    color: white; /* Texto blanco para el fondo oscuro de la imagen */
+    border: 2px solid white;
+}
+
+    .btn-secondary-hero:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Ligero brillo blanco */
+        color: white;
+        border-color: white;
+    }
+
+
+/* ============================================== */
+/* ESTILOS PARA LA SECCIÓN QUIÉNES SOMOS (DISEÑO TARJETA FLOTANTE) */
+/* ============================================== */
+
+.quienes-somos-section-new {
+    /* Mantenemos el fondo oscuro */
+    background-color: black;
+    padding: 80px 0; /* Aumentamos un poco el padding vertical para más espacio */
+    display: flex;
+    position: relative;
+    z-index: 2;
+    justify-content: center;
+    align-items: center;
+}
+
+.quienes-somos-container-new {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    /* ESTILOS DE LA TARJETA FLOTANTE */
+    background-color: #433066; /* Un tono de púrpura de MOVIA */
+    padding: 0;
+    border-radius: 18px; /* Bordes un poco más redondeados para un look suave */
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.4s ease-out, box-shadow 0.4s ease-out; /* Agregamos transición al contenedor */
+    /* Dimensiones de la tarjeta */
+    max-width: 1050px; /* Un poco más ancha */
+    width: 90%;
+    height: 40em; /* Un poco más alta */
+    overflow: hidden;
+}
+
+.text-content-new {
+    flex: 1;
+    max-width: 55%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 50px; /* Aumentamos el padding para más "aire" */
+    box-sizing: border-box;
+    color: #333;
+}
+
+.section-title-new {
+    color: #8c73b5; /* Púrpura más brillante para destacar */
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.text-content-new p {
+    font-size: 1.05em; /* Un poco más grande y legible */
+    line-height: 1.8;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.action-buttons-new {
+    margin-top: 40px;
+    display: flex;
+    gap: 20px;
+}
+
+/* Contenedor de los botones */
+.action-buttons-new {
+    margin-top: 35px;
+    display: flex; /* Para que los botones estén uno al lado del otro */
+    gap: 20px; /* Espacio entre los botones */
+}
+
+/* Botón Primario (el "Descubre más") */
+.btn-primary-new {
+    background-color: #8c73b5; /* Fondo Púrpura Sólido */
+    color: #433066;
+    border: 2px solid #433066;
+    padding: 14px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+    /* 💫 Transición para el hover */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(67, 48, 102, 0.4); /* Sombra para profundidad */
+}
+
+    .btn-primary-new:hover {
+        background-color: #433066; /* Fondo púrpura más claro */
+        color: white;
+        /* ⚡️ Efecto de borde dinámico (transform: scale) */
+        transform: scale(1.02);
+        border-color: #8c73b5;
+    }
+
+/* Botón Secundario (el "Contáctanos") */
+.btn-secondary-new {
+    background-color: #8c73b5;
+    color: #433066;
+    padding: 14px 30px;
+    border: 2px solid #433066;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+    .btn-secondary-new:hover {
+        background-color: #433066; /* Fondo púrpura más claro */
+        color: white;
+        /* ⚡️ Efecto de borde dinámico (transform: scale) */
+        transform: scale(1.02);
+        border-color: #8c73b5;
+    }
+
+.image-content-new {
+    flex: 1;
+    max-width: 45%;
+    overflow: hidden;
+    height: 100%;
+}
+
+.quienes-somos-image-new {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 0 18px 18px 0; /* Aplica bordes redondeados solo en la esquina derecha de la tarjeta */
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+/* ============================================== */
+/* RESPONSIVE PARA EL DISEÑO DE TARJETA */
+/* ============================================== */
+
+@media (max-width: 992px) {
+    .quienes-somos-container-new {
+        flex-direction: column;
+        text-align: center;
+        height: auto;
+        border-radius: 12px;
+        /* Quitamos el hover en móvil para evitar problemas de interacción */
+        transform: none !important;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.8);
+    }
+
+    .text-content-new {
+        max-width: 100%;
+        padding: 40px 20px;
+        border-right: none; /* Quitar la línea de separación vertical en móvil */
+        border-bottom: 1px solid #eee; /* Añadir línea de separación horizontal */
+    }
+
+    .image-content-new {
+        max-width: 100%;
+        height: 300px; /* Altura un poco menor para ahorrar espacio */
+    }
+
+    .quienes-somos-image-new {
+        border-radius: 0 0 12px 12px;
+        /* Quitamos el hover de la imagen en móvil */
+        transform: none !important;
+    }
+}
+
+@media (max-width: 992px) {
+    .action-buttons-new {
+        justify-content: center; /* Centra los botones cuando el texto está centrado */
+    }
+}
+
+@media (max-width: 576px) {
+    .action-buttons-new {
+        flex-direction: column; /* Apila los botones en pantallas pequeñas */
+        gap: 15px; /* Espacio entre los botones apilados */
+    }
+
+    .btn-primary-new, .btn-secondary-new {
+        width: 100%; /* Los botones ocupan todo el ancho disponible */
+        text-align: center; /* Centra el texto dentro del botón */
+    }
+}
+
+
+/* Mantenemos el resto del media query @media (max-width: 576px) si es necesario */
+
+/* --- 2. Estilos para la sección MISIÓN --- */
+.mision-section {
+    position: relative; /* contenedor posicionado para que el video absoluto se limite a él */
+    z-index: 3; /* por encima del video */
+    min-height: 420px; /* garantiza espacio para el carrusel */
+    padding: 60px 0;
+    background: transparent;
+}
+
+/* --- Estilos para el Contenedor de Tarjetas (Flexbox) --- */
+.mision-cards-container {
+    display: flex;
+    gap: 30px; /* Espacio entre las tarjetas */
+    justify-content: center;
+    flex-wrap: wrap; /* Permite que las tarjetas se apilen en dispositivos móviles */
+    position:relative;
+}
+
+/* --- Estilos para la Tarjeta Individual --- */
+.mision-card {
+    background-color: #fcfcfc; /* Fondo casi blanco */
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 30px;
+    width: 300px; /* Ancho fijo para las tarjetas */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+    .mision-card:hover {
+        transform: translateY(-5px); /* Pequeño efecto al pasar el mouse */
+        box-shadow: 0 6px 20px rgba(67, 48, 102, 0.2); /* Sombra con el color de MOVIA */
+    }
+
+/* --- Estilos para los Íconos --- */
+.card-icon {
+    font-size: 3.5em;
+    color: #8c73b5; /* Tono púrpura de MOVIA */
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* --- Estilos para Títulos y Párrafos --- */
+.mision-card h3.card-title {
+    font-size: 1.3em;
+    color: #433066 !important; /* Púrpura oscuro */
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+.mision-card p {
+    font-size: 1em;
+    color: #555;
+    line-height: 1.5;
+}
+
+    .mision-section .section-title {
+        font-size: 2.5em;
+        color: white; /* Color púrpura oscuro */
+        margin-bottom: 50px;
+        font-weight: 700;
+    }
+
+.mision-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+    .mision-content p {
+        font-size: 1.2em;
+        line-height: 1.8;
+        margin-bottom: 30px;
+    }
+
+.mision-icon {
+    font-size: 4em;
+    color: #8c73b5; /* Un tono de púrpura más claro */
+    margin-bottom: 20px;
+}
+
+
+
+
+
+/*Nuestra Vision*/
+
+.vision-movia {
+    font-size: 3em;
+    color: white;
+    padding: 0em 0em 1em 0em;
+   
+}
+
+.intro-interface {
+    background-color: black;
+    position: relative; /* Necesario para que el z-index funcione */
+    z-index: 3; /* ⚠️ CLAVE: Estará encima del mapa (z-index: 1) y del hero (z-index: 2) */
+    background-color: black; /* Ejemplo: usa el color de fondo de tu diseño */
+    color: #333; /* Color de texto para contraste */
+}
+
+
+/* Ajuste: imagen introductoria correcta (reemplazar la regla .intro-image existente) */
+.intro-grid {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding: 4em 0em;
+    justify-content: space-between; /* asegurar separación entre texto e imagen */
+    max-width: 1100px;
+    margin:0 auto;
+    padding-left: 40px;
+    padding-right:40px;
+
+}
+
+
+
+.intro-text p {
+    color:white;
+    flex: 0 0 50%; /* texto ocupa el espacio disponible */
+    max-width: 60%;
+}
+
+.intro-image {
+    flex: 0 0 34%; /* flexible, igual peso que el texto */
+    max-width: 380px; /* límite en escritorio */
+    width: 34%; /* evita colapsar en pantallas amplias */
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    background: #fff;
+    margin-left: 8px;
+    display: block;
+    height: 380px; /* altura fija razonable para la vista introductoria */
+}
+
+    /* Asegurar que la imagen cubra el bloque sin deformarse */
+    .intro-image img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-position: center ;
+        object-fit: cover; /* mantiene el encuadre y recorta si es necesario */
+    }
+
+
+.btn-ver-mas {
+    background-color: #8c73b5;
+    color: #433066;
+    padding: 12px 25px;
+    border: 2px solid #433066;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+}
+
+    .btn-ver-mas:hover {
+        background-color: #433066; /* Fondo púrpura más claro */
+        color: white;
+        /* ⚡️ Efecto de borde dinámico (transform: scale) */
+        transform: scale(1.02);
+        border-color: #8c73b5;
+    }
+
+
+   
+/*CARRUSEL*/
+
+/* --- Ajustes para que el carrusel quede visible y el footer no se superponga --- */
+.solutions-section {
+    position: relative; /* contenedor posicionado para que el video absoluto se limite a él */
+    z-index: 3; /* por encima del video */
+    min-height: 420px; /* garantiza espacio para el carrusel */
+    padding: 60px 0;
+    background: transparent;
+}
+
+
+.background-video-container {
+    position: absolute;
+    inset: 0; /* top:0; right:0; bottom:0; left:0; */
+    overflow: hidden;
+    z-index: 0; /* video detrás de la sección */
+    pointer-events: none;
+    height: 100%;
+    width:100%;
+}
+
+    .background-video-container video {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: none;
+        z-index: 0;
+    }
+
+.carousel-wrapper,
+.carousel-container,
+.carousel-track {
+    position: relative;
+    z-index: 4; /* carrusel por encima del video */
+}
+
+
+
+
+
+/* --- ESTRUCTURA DEL CARRUSEL (Centrado y Ancho) --- */
+
+.carousel-wrapper {
+    position: relative;
+    max-width: 1000px; /* Mantenemos este ancho para centrar el carrusel en la página */
+
+    margin: 40px auto;
+    display: flex;
+    align-items: center;
+}
+
+
+
+.carousel-container {
+    /* Aquí es donde definimos el ANCHO VISIBLE para 3 tarjetas */
+    width: 100%;
+    overflow: hidden;
+    /* Ajusta el padding para que los botones queden fuera de la vista de las tarjetas */
+
+    padding: 0 32px;
+}
+
+
+
+/* El riel: ES CLAVE que use display: flex */
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+
+
+/* --- Fondo de cada tarjeta --- */
+.card_1 {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),url('/images/carta_reportes.jpg');
+    background-size: cover; /* Escala la imagen para cubrir toda la tarjeta */
+    background-position: center; /* Centra la imagen en la tarjeta */
+    background-repeat: no-repeat; /*Evita que la imagen se repita */
+}
+
+.card_2 {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),url('/images/disenolimpio_carta.jpg');
+    background-size: cover; /* Escala la imagen para cubrir toda la tarjeta */
+    background-position: center; /* Centra la imagen en la tarjeta */
+    background-repeat: no-repeat; /*Evita que la imagen se repita */
+}
+
+.card_3 {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),url('/images/carta_comunidad.jpg');
+    background-size: cover; /* Escala la imagen para cubrir toda la tarjeta */
+    background-position: center; /* Centra la imagen en la tarjeta */
+    background-repeat: no-repeat; /*Evita que la imagen se repita */
+}
+
+.card_4 {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),url('/images/carta_telefono.jpg');
+    background-size: cover; /* Escala la imagen para cubrir toda la tarjeta */
+    background-position: center; /* Centra la imagen en la tarjeta */
+    background-repeat: no-repeat; /*Evita que la imagen se repita */
+}
+
+.card_5 {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),url('/images/carta_recompensa.jpg');
+    background-size: cover; /* Escala la imagen para cubrir toda la tarjeta */
+    background-position: center; /* Centra la imagen en la tarjeta */
+    background-repeat: no-repeat; /*Evita que la imagen se repita */
+}
+
+.card_6 {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),url('/images/accesibilidad_carta.jpg');
+    background-size: cover; /* Escala la imagen para cubrir toda la tarjeta */
+    background-position: center; /* Centra la imagen en la tarjeta */
+    background-repeat: no-repeat; /*Evita que la imagen se repita */
+}
+
+.card_7 {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),url('/images/carta_pago.jpg');
+    background-size: cover; /* Escala la imagen para cubrir toda la tarjeta */
+    background-position: center; /* Centra la imagen en la tarjeta */
+    background-repeat: no-repeat; /*Evita que la imagen se repita */
+}
+
+.card_8 {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),url('/images/local_carta.jpg');
+    background-size: cover; /* Escala la imagen para cubrir toda la tarjeta */
+    background-position: center; /* Centra la imagen en la tarjeta */
+    background-repeat: no-repeat; /*Evita que la imagen se repita */
+}
+
+.card_9 {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)),url('/images/carta_bici.jpg');
+    background-size: cover; /* Escala la imagen para cubrir toda la tarjeta */
+    background-position: center; /* Centra la imagen en la tarjeta */
+    background-repeat: no-repeat; /*Evita que la imagen se repita */
+}
+
+/*ANCHO DE CADA CARTA O MEDIDAS*/
+
+.card {
+    /* Cálculo ajustado para que 3 tarjetas quepan perfectamente con margen */
+    /* 100% / 3 = 33.33% */
+    /* Usamos 30% del ancho del contenedor y le añadimos un margen considerable */
+
+    min-width: 300px; /* Establece un ancho mínimo para evitar que se vean muy pequeñas */
+
+    flex-basis: calc(33.33% - 5px); /* El ancho ideal que ocupa la tarjeta. 40px = 20px de margen izquierdo + 20px de margen derecho */
+
+
+
+    margin: 0 20px; /* Margen de 20px a cada lado para separación */
+    border:1px solid black;
+    height: 50vh;
+    padding: 20px 10px;
+    box-sizing: border-box;
+    flex-shrink: 0; /* IMPORANTE: Evita que la tarjeta se encoja */
+    color: #ffffff;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+    transition: all 2s ease; /* Transición para el efecto de borde/sombra */
+}
+
+
+/* --- CONTENIDO DE LA TARJETA --- */
+
+.card-icon {
+    /* Aquí irían tus iconos o imágenes SVG */
+
+    height: 80px;
+    margin-bottom: 15px;
+    /* Estilo temporal: puedes quitar esto cuando añades tus iconos */
+
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+
+
+.card h3 {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-top: 60px;
+    margin-bottom: 10px;
+}
+
+
+
+.card p {
+    color: white;
+    font-size: 1em;
+    padding: 0px 5px;
+    opacity: 0.85;
+    line-height: 1.5;
+    flex-grow: 1; /* Ocupa el espacio restante */
+}
+
+
+
+/* --- BOTONES DE NAVEGACIÓN --- */
+
+.carousel-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-40%);
+    background: black;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    width: 40px;
+    height: 40px;
+    line-height: 0;
+    text-align: center;
+    z-index: 10;
+    cursor: pointer;
+    border-radius: 50%;
+    font-size: 15px;
+    opacity: 0.7;
+    transition: opacity 0.3s, border-color 0.3s, color 0.3s;
+}
+
+
+
+    .carousel-button:hover {
+        opacity: 1;
+        border-color: #5d9cec;
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #5d9cec;
+    }
+
+
+
+.prev-button {
+    left: 10px;
+}
+
+
+
+.next-button {
+    right: 10px;
+}
+
+/* --- ESTILOS PARA FIJAR EL FOOTER EN EL LOGIN/REGISTRO (YA EXISTENTE) --- */
+
+footer.login-footer {
+    width: 100%;
+    /* Asegúrate de que el color de fondo sea el correcto (el tono oscuro de la barra) */
+    background-color: #3b3066; /* Usando un púrpura muy oscuro */
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    margin-top: 0 !important;
+    padding: 20px 0;
+    position: relative; /* Necesario para que el z-index funcione */
+    z-index: 5; /* ⚠️ CLAVE: Estará encima del mapa (z-index: 1) y del hero (z-index: 2) */
+}
+
+    /* Aplicar Flexbox al contenido del footer de Login */
+    footer.login-footer .footer-content {
+        display: flex;
+        justify-content: space-between; /* Espacia el contenido */
+        align-items: center;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 15px;
+    }
+
+    /* Estilos de texto y enlace dentro del footer de Login */
+    footer.login-footer .copyright-info p {
+        margin: 0; /* Elimina el margen del párrafo */
+        font-size: 0.9em;
+    }
+
+    footer.login-footer a {
+        color: #fff; /* Asegura que los enlaces sean blancos */
+        text-decoration: none; /* Puedes quitarlo si prefieres */
+        opacity: 0.8;
+    }
+
+    /* Estilos de los Iconos de Redes Sociales en el Footer de Login */
+    footer.login-footer .social-links .social-icon {
+        font-size: 1.4em;
+        color: #fff; /* Color BLANCO para contrastar con el fondo oscuro */
+        margin-left: 15px;
+        opacity: 0.9;
+        transition: opacity 0.3s;
+    }
+
+        footer.login-footer .social-links .social-icon:hover {
+            opacity: 1;
+        }
+
+
+/* RESPONSIVE para el Footer de Login (Igual que el principal, apilar en móvil) */
+@media (max-width: 600px) {
+    footer.login-footer .footer-content {
+        flex-direction: column; /* Apila el contenido en móvil */
+        text-align: center;
+    }
+
+    footer.login-footer .social-links {
+        margin-top: 10px;
+    }
+
+        footer.login-footer .social-links .social-icon {
+            margin: 0 10px;
+        }
+}
+
+
+
+/* ========================================= */
+/* ESTILOS DE FORMULARIOS (LOGIN Y REGISTRO) */
+/* ========================================= */
+
+.form-container {
+    /* Fondo púrpura para la sección del formulario, cubriendo el viewport */
+    background: linear-gradient(180deg, #4a2a87 0%, #6f42c1 100%);
+    color: white;
+    min-height: calc(100vh - 90px); /* Ocupa la altura total menos el margen del navbar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.form-container-registro h2{
+    margin-bottom:1em;
+
+}
+
+.form-container-registro {
+    /* Fondo púrpura para la sección del formulario, cubriendo el viewport */
+    background: linear-gradient(180deg, #4a2a87 0%, #6f42c1 100%);
+    color: white;
+    min-height: calc(100vh - 90px); /* Ocupa la altura total menos el margen del navbar */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px 0px;
+    position: relative;
+}
+
+
+
+.form-box-login {
+    width: 90%;
+    max-width: 900px;
+    padding: 35px 40px;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden; /* Oculta partes de la decoración que se salen */
+}
+
+    /* --- ESTILOS ESPECÍFICOS PARA EL REGISTRO DE DOS COLUMNAS --- */
+
+    /* 1. Ajustar el tamaño del contenedor del formulario de registro */
+    .form-box-login.large-form {
+        /* Hacemos el contenedor más ancho para acomodar las dos columnas */
+        max-width: 680px;
+        width: 90%;
+    }
+
+/* 2. Estilo para el contenedor de la cuadrícula (SOLUCIÓN DE 2 COLUMNAS) */
+.registro-grid {
+    display: grid;
+    /* Define dos columnas de igual ancho y un espacio entre ellas */
+    grid-template-columns: 1fr 1fr;
+    gap: 20px; /* Espacio entre los campos */
+    margin-bottom: 10px;
+}
+
+/* 3. Estilo para asegurar que el botón y los campos que no están en la cuadrícula vayan al 100% */
+.btn-primary-movia.full-width-btn {
+    width: 100%; /* El botón ocupa todo el ancho */
+    margin-top: 20px;
+    margin-bottom: 15px;
+}
+
+
+/* Estilos de los campos de entrada */
+.form-control-movia {
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo muy ligeramente transparente */
+    color: white;
+    border: none;
+    border-radius: 25px; /* Bordes redondeados de las maquetas*/
+    padding: 12px 20px;
+    margin: 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+    transition: background-color 0.3s;
+}
+
+    .form-control-movia::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .form-control-movia:focus {
+        background-color: rgba(255, 255, 255, 0.2);
+        outline: none;
+    }
+
+/* Los campos dentro del grid no necesitan margen vertical (ya lo da el gap) */
+.registro-grid .form-group .form-control-movia {
+    margin: 0;
+}
+
+/* Estilo del botón */
+.btn-primary-movia {
+    background-color: white;
+    color: #4a2a87; /* Púrpura oscuro para el texto del botón*/
+    border: none;
+    border-radius: 25px;
+    padding: 12px 30px;
+    /* Retiramos el align-self: flex-start; para que el botón full-width se centre con el formulario */
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+    .btn-primary-movia:hover {
+        opacity: 0.9;
+    }
+
+/* Estilos de enlaces */
+.login-link-container p,
+.mt-3 p {
+    color: white; /* Asegura que el texto de la pregunta sea blanco */
+    text-align: center;
+}
+
+.login-link {
+    color: white;
+    font-weight: bold;
+    text-decoration: underline;
+    transition: color 0.3s;
+}
+
+    .login-link:hover {
+        color: #f0f0f0;
+    }
+
+/* RESPONSIVE PARA EL GRID DE REGISTRO */
+@media (max-width: 768px) {
+    /* En pantallas medianas y pequeñas, cambiamos el grid a una sola columna */
+    .registro-grid {
+        grid-template-columns: 1fr;
+        gap: 0; /* Quitamos el gap */
+    }
+
+        /* Restauramos el margen vertical para los campos en móvil */
+        .registro-grid .form-group .form-control-movia {
+            margin: 10px 0;
+        }
+
+    /* Hacemos el formulario más delgado en móvil */
+    .form-box-login.large-form {
+        max-width: 90%;
+        padding: 20px;
+    }
+}
+
+/* Estilos de validación */
+.text-danger {
+    color: #ffdddd !important; /* Un rojo más claro para que se vea en el fondo púrpura */
+    font-size: 0.85em;
+    display: block;
+    margin-top: -5px;
+    margin-bottom: 10px;
+}
+
+/* --- DECORACIÓN (Imitación de la pieza del autobús) --- */
+.form-decoration {
+    /* Esto simula el corte diagonal con la pieza del bus en el lado derecho */
+    position: absolute;
+    top: 0;
+    right: -200px; /* Ajusta esto para colocar la pieza */
+    width: 500px;
+    height: 100%;
+    background-image: url('/image/pieza_bus.png'); /* Debes agregar esta imagen a wwwroot/image */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: right center;
+    opacity: 0.3;
+    z-index: 5;
+}
+
+/* Alineación de formularios para que la decoración se vea al lado */
+.login-form, .register-form {
+    display: flex;
+    flex-direction: column;
+    /* Ajusta el ancho para dar espacio a la decoración lateral */
+    width: 60%;
+    z-index: 10;
+}
+
+/* Media query para pantallas pequeñas (ajusta la columna de registro) */
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .btn-primary-movia {
+        width: 100%;
+    }
+
+    .form-box {
+        padding: 20px;
+    }
+
+    .login-form, .register-form {
+        width: 100%;
+    }
+
+    .form-decoration {
+        display: none; /* Oculta la decoración en móvil */
+    }
+}
+
+
+
+/* Responsive del Footer Principal */
+@media (max-width: 600px) {
+    .footer-content {
+        flex-direction: column; /* Apila el contenido en móvil */
+        text-align: center;
+    }
+
+    .social-links {
+        margin-top: 10px;
+    }
+
+        .social-links .social-icon {
+            margin: 0 10px;
+        }
+}
+
+
+/* 4. Adaptación para Móviles (Una sola columna)  Registro*/
+@media (max-width: 680px) {
+    .form-box.large-form {
+        /* Se reduce el ancho en móvil */
+        width: 100%;
+        padding: 20px;
+    }
+
+    .registro-grid {
+        /* En móvil, volvemos a una sola columna */
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+}
+
+
+/*Area de Contactanos*/
+@media (max-width: 900px) {
+    .contact-grid {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .contact-map iframe {
+        min-height: 260px;
+    }
+
+    .contact-form {
+        align-items: stretch;
+    }
+}
+
+/* Media Query: apilar en móvil Area de descargas*/
+@media (max-width: 768px) {
+    .descarga-app-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+        .descarga-app-content .text-block {
+            text-align: center;
+        }
+
+    .download-buttons {
+        justify-content: center;
+    }
+
+    .phone-image-block {
+        order: -1; /* Pone la imagen del teléfono arriba */
+        margin-bottom: 40px;
+    }
+}
+
+/* Responsive: apilar y reducir alturas en pantallas pequeñas  Area Nuestra Vision*/
+@media (max-width: 900px) {
+    .intro-grid {
+        flex-direction: column-reverse;
+        text-align: center;
+    }
+
+    .intro-text .logo-movia {
+        font-size: 48px;
+    }
+
+    .intro-text p {
+        margin: 10px auto 18px;
+        max-width: 100%;
+    }
+
+    .intro-image {
+        width: 100%;
+        max-width: 720px;
+        height: 240px; /* menor altura en móvil */
+        margin-left: 0;
+    }
+}
+
+
+/* Media Query para móviles: apilar los bloques Area quienes somos */
+@media (max-width: 768px) {
+    .quienes-somos-content {
+        flex-direction: column;
+    }
+
+        .quienes-somos-content .image-block {
+            order: -1;
+            margin-bottom: 30px;
+        }
+
+    .quienes-somos-img-wrapper {
+        width: 100%; /* La imagen puede ser más ancha en móvil */
+        max-width: none;
+    }
+}
+
+
+
+
+/*LOGIN CSS*/
+
+/* ==============================
+   ESTILOS SOLO PARA LOGIN
+   ============================== */
+
+#myVideo {
+    /* Posicionamiento y tamaño inicial para cubrir el 100% de la ventana */
+    position: fixed;
+    top: 0; /* Agregamos top y left para asegurar el posicionamiento desde la esquina */
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* CLAVE: Esto hará que el video se ajuste a la ventana sin recortarse. */
+    object-fit: cover; /* Esta es la propiedad que cambiará cómo se ajusta */
+    /* Opcional: Si quedan bordes (barras negras) y quieres un color de fondo diferente, 
+     puedes añadir un background-color aquí. */
+    background-color: white; /* Ejemplo: color negro para las "barras" */
+    /* Manda el video al fondo */
+    z-index: -100;
+}
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-size: 400% 400%;
+}
+
+    /* Contenedor principal del formulario */
+    .login-page .container-login {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(26px);
+        padding: 40px;
+        border-radius: 25px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        width: 100%;
+        max-width: 450px;
+        color: white;
+    }
+
+        /* Títulos */
+        .login-page .container-login h1 {
+            text-align: center;
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .login-page .container-login p {
+            text-align: center;
+            color: #d6cfff;
+            margin-bottom: 25px;
+        }
+
+    /* Inputs */
+    .login-page .form-group {
+        margin-bottom: 20px;
+    }
+
+        .login-page .form-group label {
+            display: block;
+            color: #f1eaff;
+            font-weight: 500;
+            margin-bottom: 6px;
+        }
+
+    .login-page .form-control {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 25px;
+        background-color: rgba(255, 255, 255, 0.15);
+        color: #fff;
+        font-size: 15px;
+    }
+
+        .login-page .form-control:focus {
+            outline: none;
+            background-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 0 3px rgba(145, 100, 255, 0.4);
+        }
+
+    /* Mensajes de error */
+    .login-page .text-danger,
+    .login-page span[data-valmsg-for] {
+        color: #ff8080;
+        font-size: 13px;
+    }
+
+    /* Botón */
+    .login-page .btn-login {
+        width: 100%;
+        background-color: #fff;
+        color: #4A2C8C;
+        border: 1px solid white;
+        padding: 12px;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 1s ease;
+    }
+
+        .login-page .btn-login:hover {
+            border: 1px solid white;
+            background-color: rgba(123, 74, 244, 0.7);
+            color: white;
+            transition: 0.7s;
+        }
+
+    /* Enlaces */
+    .login-page .login-links {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+        gap: 20px;
+        flex-direction:column;
+    }
+
+        .login-page .login-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+            .login-page .login-links a:hover {
+                color: #d1b8ff;
+            }
+
+/* Responsivo */
+@media (max-width: 500px) {
+    .login-page .container-login {
+        padding: 30px 25px;
+    }
+}
+
+/* Animación del fondo */
+@keyframes gradientMove {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+/* ========================================================== */
+/* ESTILOS PARA EL CONTENEDOR PRINCIPAL DEL MAPA (Fullscreen) */
+/* ========================================================== */
+
+#map-main-container {
+    /* Posicionamiento para ocupar toda la ventana (Background) */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh; /* Altura de la ventana */
+    z-index: 1; /* CLAVE: Lo envía al fondo */
+    overflow: hidden; /* Evita barras de desplazamiento innecesarias */
+}
+
+/* El contenedor del mapa real debe ocupar el 100% de su padre */
+#map-main {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 100%;
+}
+
+/* El Hero Section debe estar por encima del mapa */
+.hero-section {
+    background-image: none;
+    position: relative;
+    z-index: 2; /* El contenido flotante está encima del mapa */
+    pointer-events: none; /* <--- ESTO PERMITE QUE LOS CLICS PASEN AL MAPA (z-index: 1) */
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+/* --- 1. CONTENEDOR DE LA BARRA DE BÚSQUEDA --- */
+#map-main-container .search-bar {
+    /* Posicionamiento y capa (ajustados previamente) */
+    top: 12%;
+    left: 10%;
+    z-index: 5;
+    /* ------------------------------------- */
+    /* ESTILOS DE ELEGANCIA */
+    /* ------------------------------------- */
+    /* Color de fondo: Blanco suave y limpio */
+    background-color: rgba(255, 255, 255, 0.95);
+    /* Bordes redondeados suaves (similar a tus cards) */
+    border-radius: 12px;
+    /* Sombra elegante (sutil) */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    /* Relleno interno para que el contenido respire */
+    padding: 12px 18px;
+    /* Evita que se colapse el diseño */
+    display: flex;
+    align-items: center;
+    /* Ancho moderado */
+    width: 400px;
+}
+
+    /* --- 2. EL CAMPO DE ENTRADA (INPUT) DENTRO DE LA BARRA --- */
+    #map-main-container .search-bar input#searchInput {
+        /* Quitar el borde por defecto y el fondo negro */
+        border: none;
+        background-color: transparent;
+        outline: none; /* Quitar el foco azul al hacer clic */
+        /* Estilos de fuente */
+        color: #333; /* Texto oscuro */
+        font-size: 16px;
+        font-weight: 400;
+        width: 100%;
+        /* Relleno lateral solo si es necesario, ya que el padding está en el contenedor */
+        padding: 0;
+    }
+
+/* --- 3. CONTENEDOR DE SUGERENCIAS (Lista desplegable) --- */
+#map-main-container #suggestions {
+    position: absolute;
+    /* Ajustamos la posición para que caiga justo debajo del contenedor principal */
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 250px;
+    overflow-y: auto;
+    /* Estilos elegantes del menú desplegable */
+    background-color: white;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+}
+
+#map-main-container .toggle {
+    /* Posicionamiento: Asegura que esté justo debajo de la barra de navegación */
+    top: 73%;
+    right: 10px;
+    /* Propiedades de Posicionamiento Esenciales */
+    position: absolute; /* Es crucial para que 'top' y 'right' funcionen */
+    z-index: 5;
+    /* Estilos Visuales */
+    cursor: pointer;
+    background-color: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    font-size: 1.2em;
+    display: flex; /* Asegura que el emoji esté centrado */
+    align-items: center;
+    justify-content: center;
+}
+
+/* ========================================================== */
+/* ESTILOS DE LOS CONTROLES INTERACTIVOS (Extraídos de tu HTML) */
+/* ========================================================== */
+
+/* Estilos de los controles (Header, Toggle, Locate, Search) del mapa principal */
+
+.header {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    z-index: 10;
+    font-size: 18px;
+    font-weight: 600;
+    color: #5b4bff; /* var(--accent) */
+}
+
+.locate-bus {
+    position: absolute;
+    bottom: 80px;
+    z-index: 5;
+    background: #fff;
+    border: none;
+    top: 57%;
+    right: 10px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+
+.locate {
+    position: absolute;
+    bottom: 80px;
+    z-index: 5;
+    background: #fff;
+    border: none;
+    top:65%;
+    right:10px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+}
+
+.status {
+    position: absolute;
+    bottom: 15px;
+    left: 20px;
+    font-size: 13px;
+    opacity: 0.8;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    padding: 6px 10px;
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+    z-index: 10;
+}
+
+.search-bar {
+    position: absolute;
+    top: 60px;
+    left: 20px;
+    z-index: 10;
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    width: 260px;
+}
+
+    .search-bar input {
+        width: 100%;
+        padding: 6px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        outline: none;
+    }
+
+#suggestions {
+    margin-top: 6px;
+    font-size: 13px;
+    color: #333;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+.suggestion {
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 6px;
+}
+
+    .suggestion:hover {
+        background-color: #eee;
+    }
+
+
+.search-bar, .toggle, .locate {
+    position: fixed; /* O absolute, dependiendo de si quieres que se muevan con el scroll */
+    z-index: 100; /* Alto, pero aún menor que el 10000 del header */
+}
+
+/* ========================================================== */
+/* ESTILOS PARA EL MAPA DE CONTACTO (SECCIÓN) */
+/* ========================================================== */
+
+.contact-map-wrapper {
+    width: 100%;
+    height: 450px; /* Altura fija para el mapa de contacto */
+}
+
+#map-contact-container {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+    overflow: hidden; /* Oculta cualquier elemento de Mapbox que se desborde */
+    position:fixed;
+    z-index:-100;
+}
+
+#map-contact {
+    width: 100%;
+    height: 100%;
+}
+
+
+.hero-section .logo-movia,
+.hero-section a,
+#map-main-container .mapboxgl-ctrl, /* Controles de zoom y navegación de Mapbox */
+#map-main-container .search-bar,
+#map-main-container .toggle,
+#map-main-container .locate-bus,
+#map-main-container .locate {
+    pointer-events: auto; /* Permite clics en estos elementos */
+}
+
+/* ========================================================== */
+/* ESTILOS PARA REPORTES (SECCIÓN) */
+/* ========================================================== */
+
+.report-layout {
+    margin: 0 auto;
+    background-color: black;
+}
+
+/* ========================================= */
+/* 3. Encabezado (Header)                   */
+/* ========================================= */
+
+.report-header {
+    margin-bottom: 40px;
+    background-color:#433066;
+    padding-bottom: 20px;
+    padding-top:10px;
+    padding-left:10px;
+}
+
+.report-title {
+    font-size: 2.5rem; /* 40px */
+    color: #8c73b5;
+    margin-bottom: 8px;
+}
+
+.report-description {
+    font-size: 1.125rem; /* 18px */
+    color: whitesmoke; /* Gris medio */
+}
+
+/* ========================================= */
+/* 4. Cuadrícula de Reportes (Grid)         */
+/* ========================================= */
+
+.report-grid {
+    display: grid;
+    /* Centra el grid dentro de su contenedor padre (.report-layout) */
+    justify-content: center;
+    margin:40px;
+    /* En móvil: 1 columna, no necesita centrado explícito porque ocupa todo el ancho */
+    grid-template-columns: repeat(1, 1fr);
+    gap: 32px;
+}
+
+/* Media Query para Tablet (md) */
+@media (min-width: 768px) {
+    .report-grid {
+        /* Centra el grid dentro de su contenedor padre (.report-layout) */
+        justify-content: center;
+        /* Definimos el ancho de las 2 columnas que quedan */
+        /* Repetimos 2 columnas con un ancho fijo (ej. 350px) o máximo (ej. 1fr) */
+        grid-template-columns: repeat(2, 350px);
+        /* Si usas '1fr', las tarjetas serán más grandes, pero con 350px se ven centradas si no llenan el espacio */
+        /* NOTA: Para que 2 tarjetas se vean bien, usaremos un ancho fijo de 350px para cada una. */
+        /* Si prefieres que las tarjetas se estiren y solo se centren en el espacio sobrante, usa `repeat(2, 1fr)` y se centrarán solas. */
+        /* Opción 1 (Tarjetas de ancho fijo y centradas): */
+        /* grid-template-columns: repeat(2, 350px); */
+        /* Opción 2 (Tarjetas que se estiran y se centran en el medio): */
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Media Query para Desktop (lg) */
+@media (min-width: 1024px) {
+    .report-grid {
+        /* Asegura que siga centrado si hay espacio sobrante (p. ej., si solo hay 2 cards) */
+        justify-content: center;
+        /* Como ahora solo hay 2 tarjetas, mantenemos la definición de 2 columnas */
+        /* Si decides volver a tener 3, cambia esto a `repeat(3, 1fr)` */
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* ========================================= */
+/* 5. Tarjetas de Reporte (Cards)           */
+/* ========================================= */
+
+.report-card {
+    background-color: #433066;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+    margin-bottom:10px;
+}
+
+
+
+.card-content {
+    padding: 24px;
+}
+
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    height:60px;
+    border-bottom: 1px solid #8c73b5;
+}
+
+.card-icon {
+    font-size: 2rem; /* 32px */
+    margin-bottom:unset;
+}
+
+/* Colores de iconos */
+.card-incident .text-red {
+    color: #8c73b5;
+    background-color: transparent;
+    margin:unset;
+}
+
+.card-performance .text-blue {
+    color: #8c73b5;
+    background-color: transparent;
+}
+
+.card-feedback .text-green {
+    color: #8c73b5;
+    background-color: transparent;
+}
+
+.card-tag {
+    font-size: 0.75rem; /* 12px */
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 9999px; /* Píldora */
+}
+
+/* Colores de tags */
+.tag-red {
+    background-color: #fee2e2;
+    color: var(--color-red);
+}
+
+.tag-blue {
+    background-color: #dbeafe;
+    color: var(--color-blue);
+}
+
+.tag-green {
+    background-color: #d1fae5;
+    color: var(--color-green);
+}
+
+.card-title-r{
+    font-size: 1.5rem; /* 24px */
+    font-weight: 700;
+    color: #8c73b5; /* Púrpura más brillante para destacar */
+    margin-bottom: 8px;
+    margin-top:10px;
+}
+
+.card-text {
+    color: white;
+    font-size: 0.95rem;
+    padding: 0px 10px;
+    margin-bottom: 35px;
+    min-height: 40px; /* Para mantener la altura de la tarjeta consistente */
+}
+
+.card-button {
+    background-color: #8c73b5; /* Fondo Púrpura Sólido */
+    color: #433066;
+    margin:10px 10px;
+    border: 2px solid #433066;
+    padding: 10px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    display: inline-block;
+    white-space: nowrap;
+    /* 💫 Transición para el hover */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(67, 48, 102, 0.4); /* Sombra para profundidad */
+}
+
+    .card-button:hover {
+        background-color: #433066; /* Fondo púrpura más claro */
+        color: white;
+        /* ⚡️ Efecto de borde dinámico (transform: scale) */
+        transform: scale(1.02);
+        border-color: #8c73b5;
+    }
+
+
+/* ========================================= */
+/* SECCION DE REPORTES DE INCIDENTES (Cards)      
+/* ========================================= */
+
+.main-container {
+    margin: 0 auto;
+    padding: var(--layout-padding-top) 20px 40px 20px;
+    background-color: #433066;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.page-header {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+}
+
+.page-title {
+    font-size: 2.5rem;
+    color: #8c73b5; /* Sigue usando el morado principal */
+    margin-bottom: 8px;
+    text-align:center;
+}
+
+.page-subtitle {
+    font-size: 1.125rem;
+    color: whitesmoke; /* Gris medio, legible */
+    text-align:center;
+}
+
+.card-button-reporte {
+    background-color: #8c73b5; /* Fondo Púrpura Sólido */
+    color: #433066;
+    border: 2px solid #433066;
+    padding: 10px 20px;
+    margin: 10px 10px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-block;
+    white-space: nowrap;
+    /* 💫 Transición para el hover */
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(67, 48, 102, 0.4); /* Sombra para profundidad */
+}
+
+    .card-button-reporte:hover {
+        background-color: #433066; /* Fondo púrpura más claro */
+        color: white;
+        /* ⚡️ Efecto de borde dinámico (transform: scale) */
+        transform: scale(1.02);
+        border-color: #8c73b5;
+    }
+
+/* ----------------------------------------- */
+/* 3. Estilos de Vistas Detalladas (Reporte) */
+/* ----------------------------------------- */
+
+.report-details-container {
+    background-color: #433066;
+    padding: 30px;
+    border-radius: 12px;
+    border-top: 1px solid #8c73b5;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Sombra más pronunciada con tono morado */
+}
+
+.section-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #8c73b5;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--movia-purple-light); /* Borde inferior más suave */
+}
+
+/* Tablas */
+.data-table {
+    width: 100%;
+    margin-top: 20px;
+    border-radius: 8px; /* Bordes redondeados para la tabla */
+    overflow: hidden; /* Asegura que los bordes redondeados se apliquen a las celdas */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra sutil para la tabla */
+    background-color:#8c73b5;
+}
+
+    .data-table th, .data-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e0e7ff; /* Borde más claro para filas */
+    }
+
+    .data-table th {
+        background-color: var(--movia-primary); /* Fondo morado oscuro para encabezados */
+        font-weight: 600;
+        color: white; /* Texto blanco en encabezados */
+        font-size: 0.95rem;
+        text-transform: uppercase; /* Para un toque más formal */
+        letter-spacing: 0.05em;
+    }
+
+    .data-table td {
+        color: white; /* Color blanco para el texto de las celdas de datos */
+    }
+
+    .data-table tr { /* Filas impares con fondo ligeramente morado */
+        background-color: var(--movia-purple-light);
+    }
+
+    .data-table tr:hover {
+        background-color: #d8c2ed; /* Un morado un poco más intenso al pasar el mouse */
+        cursor: pointer;
+    }
+
+/* Insignias/Tags */
+.tag {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: white;
+    margin-right: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Sombra sutil para tags */
+}
+
+.tag-high {
+    background-color: #433066;
+}
+
+.tag-medium {
+    background-color: #433066;
+}
+
+.tag-low {
+    background-color: #433066;
+}
+
+.tag-resolved {
+       background-color: #433066;
+}
+
+/* Filtros */
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 25px;
+    padding: 20px; /* Un poco más de padding */
+    background-color: #8c73b5;
+    border-radius: 12px; /* Bordes más redondeados */
+    box-shadow: inset 0 1px 5px rgba(0, 0, 0, 0.05); /* Sombra interior sutil */
+    border: 1px solid rgba(88, 28, 135, 0.1); /* Borde muy sutil morado */
+}
+
+    .filter-bar input[type="text"],
+    .filter-bar input[type="date"],
+    .filter-bar select {
+        padding: 10px 15px; /* Más padding para los inputs */
+        border: 1px solid var(--movia-light); /* Bordes de los inputs con un morado claro */
+        border-radius: 8px; /* Bordes redondeados */
+        font-size: 1rem;
+        flex-grow: 1;
+        min-width: 150px;
+        background-color: white; /* Fondo blanco para mejor contraste y legibilidad */
+        color: var(--movia-text);
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+        .filter-bar input:focus, .filter-bar select:focus {
+            border-color: var(--movia-primary); /* Borde morado oscuro al enfocar */
+            box-shadow: 0 0 0 3px rgba(88, 28, 135, 0.2); /* Sombra de enfoque morada */
+            outline: none;
+        }
+
+
+/* Responsivo */
+@media (min-width: 768px) {
+    .filter-bar {
+        flex-wrap: nowrap;
+    }
+}
+
